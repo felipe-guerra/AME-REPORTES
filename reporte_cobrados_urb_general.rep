@@ -29,44 +29,44 @@ object TRpReport
         'o,'#13#10#13#10'    -- TOTAL CORREGIDO (f'#243'rmula exacta)'#13#10#9'SUM(FONDOS_PROPI' +
         'OS + FONDOS_AJENOS + Recargo - Descuento + Interes) AS TOTAL'#13#10#13#10 +
         'FROM ('#13#10'    -- TITULOS_PREDIO'#13#10'    SELECT'#13#10'        YEAR(TitPr_Fe' +
-        'chaRecaudacion) AS periodo,'#13#10'        TitPr_IPU AS IPU,'#13#10'        ' +
-        'TitPr_TasaAdministrativa AS TasaAdministrativa,'#13#10'        TitPr_S' +
-        'olNoEdif AS SolNoEdif,'#13#10'        TitPr_ConstObsoleta AS ConstObso' +
-        'leta,'#13#10'        TitPr_SNERecargo AS SNERecargo,'#13#10'        TitPr_Va' +
-        'lor1 AS Valor1,'#13#10'        TitPr_Valor2 AS Valor2,'#13#10'        0 AS M' +
-        'agisterio,'#13#10'        0 AS EducacionElemental,'#13#10'        0 AS Medic' +
-        'inaRural,'#13#10'        0 AS OtrosAdicionales,'#13#10'        0 AS Recolecc' +
-        'ionBasura,'#13#10'        TitPr_Bomberos AS Bomberos,'#13#10'        0 AS Vi' +
-        'viendaRural,'#13#10'        0 AS EstablecEducativos,'#13#10'        TitPr_In' +
-        'teres AS Interes,'#13#10#9#9'TitPr_Descuento AS Descuento,'#13#10#9#9'TitPr_Reca' +
-        'rgo AS Recargo,'#13#10#13#10'TitPr_IPU + TitPr_TasaAdministrativa + TitPr_' +
-        'SolNoEdif + TitPr_ConstObsoleta + '#13#10'TitPr_SNERecargo + TitPr_Val' +
-        'or1 + TitPr_Valor2 AS '#39'FONDOS_PROPIOS'#39','#13#10'TitPr_Bomberos AS '#39'FOND' +
-        'OS_AJENOS'#39#13#10#13#10#13#10'    FROM TITULOS_PREDIO'#13#10'    WHERE TitPr_Estado ' +
-        'IN ('#39'C'#39', '#39'Q'#39')'#13#10'      AND RIGHT(RTRIM(TitPr_NumTitulo), 2) = '#39'PU'#39 +
-        #13#10#13#10'      AND TitPr_FechaRecaudacion BETWEEN :FECHA_DESDE AND :F' +
-        'ECHA_HASTA'#13#10'      AND Usu_usuario like :USUARIO'#13#10#13#10'    UNION ALL' +
-        #13#10#13#10'    -- CARTERA_VENCIDA'#13#10'    SELECT'#13#10'        YEAR(CarVe_Fecha' +
-        'Recaudacion) AS periodo,'#13#10'        CarVe_IPU AS IPU,'#13#10'        Car' +
-        'Ve_TasaAdministrativa AS TasaAdministrativa,'#13#10'        CarVe_SolN' +
-        'oEdif AS SolNoEdif,'#13#10'        CarVe_ConstObsoleta AS ConstObsolet' +
-        'a,'#13#10'        CarVe_SNERecargo AS SNERecargo,'#13#10'        CarVe_Valor' +
-        '1 AS Valor1,'#13#10'        CarVe_Valor2 AS Valor2,'#13#10'        CarVe_Mag' +
-        'isterio AS Magisterio,'#13#10'        CarVe_EducacionElemental AS Educ' +
-        'acionElemental,'#13#10'        CarVe_MedicinaRural AS MedicinaRural,'#13#10 +
-        '        CarVe_OtrosAdicionales AS OtrosAdicionales,'#13#10'        Car' +
-        'Ve_RecoleccionBasura AS RecoleccionBasura,'#13#10'        CarVe_Bomber' +
-        'os AS Bomberos,'#13#10'        CarVe_ViviendaRural AS ViviendaRural,'#13#10 +
-        '        CarVe_EstablecEducativos AS EstablecEducativos,'#13#10'       ' +
-        ' CarVe_Interes AS Interes,'#13#10#9#9'CarVe_Descuento AS Descuento,'#13#10#9#9'C' +
-        'arVe_Recargo AS Recargo,'#13#10#13#10#13#10'CarVe_IPU + CarVe_TasaAdministrati' +
-        'va + CarVe_SolNoEdif + CarVe_ConstObsoleta + '#13#10'CarVe_SNERecargo ' +
-        '+ CarVe_Valor1 + CarVe_Valor2 AS '#39'FONDOS_PROPIOS'#39','#13#10'CarVe_Bomber' +
-        'os AS '#39'FONDOS_AJENOS'#39#13#10#13#10#13#10'    FROM CARTERA_VENCIDA'#13#10'    WHERE C' +
-        'arVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'      AND RIGHT(RTRIM(CarVe_NumTitulo' +
-        '), 2) = '#39'PU'#39#13#10#13#10'      AND CarVe_FechaRecaudacion BETWEEN :FECHA_' +
-        'DESDE AND :FECHA_HASTA'#13#10'     AND Usu_usuario like :USUARIO'#13#10#13#10') ' +
-        'AS datos_desglosados'#13#10'GROUP BY periodo'#13#10'ORDER BY periodo DESC;'
+        'chaEmision) AS periodo,'#13#10'        TitPr_IPU AS IPU,'#13#10'        TitP' +
+        'r_TasaAdministrativa AS TasaAdministrativa,'#13#10'        TitPr_SolNo' +
+        'Edif AS SolNoEdif,'#13#10'        TitPr_ConstObsoleta AS ConstObsoleta' +
+        ','#13#10'        TitPr_SNERecargo AS SNERecargo,'#13#10'        TitPr_Valor1' +
+        ' AS Valor1,'#13#10'        TitPr_Valor2 AS Valor2,'#13#10'        0 AS Magis' +
+        'terio,'#13#10'        0 AS EducacionElemental,'#13#10'        0 AS MedicinaR' +
+        'ural,'#13#10'        0 AS OtrosAdicionales,'#13#10'        0 AS RecoleccionB' +
+        'asura,'#13#10'        TitPr_Bomberos AS Bomberos,'#13#10'        0 AS Vivien' +
+        'daRural,'#13#10'        0 AS EstablecEducativos,'#13#10'        TitPr_Intere' +
+        's AS Interes,'#13#10#9#9'TitPr_Descuento AS Descuento,'#13#10#9#9'TitPr_Recargo ' +
+        'AS Recargo,'#13#10#13#10'TitPr_IPU + TitPr_TasaAdministrativa + TitPr_SolN' +
+        'oEdif + TitPr_ConstObsoleta + '#13#10'TitPr_SNERecargo + TitPr_Valor1 ' +
+        '+ TitPr_Valor2 AS '#39'FONDOS_PROPIOS'#39','#13#10'TitPr_Bomberos AS '#39'FONDOS_A' +
+        'JENOS'#39#13#10#13#10#13#10'    FROM TITULOS_PREDIO'#13#10'    WHERE TitPr_Estado IN (' +
+        #39'C'#39', '#39'Q'#39')'#13#10'      AND RIGHT(RTRIM(TitPr_NumTitulo), 2) = '#39'PU'#39#13#10#13#10 +
+        '      AND TitPr_FechaRecaudacion BETWEEN :FECHA_DESDE AND :FECHA' +
+        '_HASTA'#13#10'      AND Usu_usuario like :USUARIO'#13#10#13#10'    UNION ALL'#13#10#13#10 +
+        '    -- CARTERA_VENCIDA'#13#10'    SELECT'#13#10'        YEAR(CarVe_FechaEmis' +
+        'ion) AS periodo,'#13#10'        CarVe_IPU AS IPU,'#13#10'        CarVe_TasaA' +
+        'dministrativa AS TasaAdministrativa,'#13#10'        CarVe_SolNoEdif AS' +
+        ' SolNoEdif,'#13#10'        CarVe_ConstObsoleta AS ConstObsoleta,'#13#10'    ' +
+        '    CarVe_SNERecargo AS SNERecargo,'#13#10'        CarVe_Valor1 AS Val' +
+        'or1,'#13#10'        CarVe_Valor2 AS Valor2,'#13#10'        CarVe_Magisterio ' +
+        'AS Magisterio,'#13#10'        CarVe_EducacionElemental AS EducacionEle' +
+        'mental,'#13#10'        CarVe_MedicinaRural AS MedicinaRural,'#13#10'        ' +
+        'CarVe_OtrosAdicionales AS OtrosAdicionales,'#13#10'        CarVe_Recol' +
+        'eccionBasura AS RecoleccionBasura,'#13#10'        CarVe_Bomberos AS Bo' +
+        'mberos,'#13#10'        CarVe_ViviendaRural AS ViviendaRural,'#13#10'        ' +
+        'CarVe_EstablecEducativos AS EstablecEducativos,'#13#10'        CarVe_I' +
+        'nteres AS Interes,'#13#10#9#9'CarVe_Descuento AS Descuento,'#13#10#9#9'CarVe_Rec' +
+        'argo AS Recargo,'#13#10#13#10#13#10'CarVe_IPU + CarVe_TasaAdministrativa + Car' +
+        'Ve_SolNoEdif + CarVe_ConstObsoleta + '#13#10'CarVe_SNERecargo + CarVe_' +
+        'Valor1 + CarVe_Valor2 AS '#39'FONDOS_PROPIOS'#39','#13#10'CarVe_Bomberos AS '#39'F' +
+        'ONDOS_AJENOS'#39#13#10#13#10#13#10'    FROM CARTERA_VENCIDA'#13#10'    WHERE CarVe_Est' +
+        'ado IN ('#39'C'#39', '#39'Q'#39')'#13#10'      AND RIGHT(RTRIM(CarVe_NumTitulo), 2) = ' +
+        #39'PU'#39#13#10#13#10'      AND CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE AN' +
+        'D :FECHA_HASTA'#13#10'     AND Usu_usuario like :USUARIO'#13#10#13#10') AS datos' +
+        '_desglosados'#13#10'GROUP BY periodo'#13#10'ORDER BY periodo DESC;'
     end
     item
       Alias = 'CABECERA'

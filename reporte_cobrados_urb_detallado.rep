@@ -15,38 +15,39 @@ object TRpReport
       SQL = 
         'SELECT (OTROS_FOND_PROPIOS + BOMBEROS_FOND_AJENOS - Descuento + ' +
         'Recargo + Interes) AS ValorTCobrado, * FROM ('#13#10'SELECT'#13#10'    YEAR(' +
-        'TitPr_FechaRecaudacion) AS periodo,'#13#10'    Pre_CodigoCatastral,'#13#10' ' +
-        '   TitPr_NumTitulo AS NumTitulo,'#13#10'    TitPr_Nombres AS Nombres,'#13 +
-        #10'    Titpr_RUC_CI AS Cedula_RUC,'#13#10'    TitPr_IPU AS IPU,'#13#10'    Tit' +
-        'Pr_TasaAdministrativa AS TasaAdministrativa,'#13#10#13#10'TitPr_IPU + TitP' +
-        'r_TasaAdministrativa + TitPr_SolNoEdif + TitPr_ConstObsoleta + '#13 +
-        #10'TitPr_SNERecargo + TitPr_Valor1 + TitPr_Valor2 AS '#39'OTROS_FOND_P' +
-        'ROPIOS'#39','#13#10#13#10#13#10#13#10'    TitPr_Bomberos AS '#39'BOMBEROS_FOND_AJENOS'#39','#13#10' ' +
-        '   TitPr_Valor1 AS Valor1,'#13#10'    TitPr_Valor2 AS Valor2,'#13#10'    Tit' +
-        'Pr_ValorEmitido AS ValorEmitido,'#13#10'    TitPr_Descuento AS Descuen' +
-        'to,'#13#10'    TitPr_Recargo AS Recargo,'#13#10'    TitPr_Interes AS Interes' +
-        ','#13#10'    TitPr_FechaRecaudacion AS FechaRecaudacion'#13#10'FROM TITULOS_' +
-        'PREDIO'#13#10'WHERE TitPr_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'    AND RIGHT(RTRIM(Ti' +
-        'tPr_NumTitulo), 2) = '#39'PU'#39#13#10'    AND TitPr_FechaRecaudacion BETWEE' +
-        'N :FECHA_DESDE AND :FECHA_HASTA'#13#10'    AND Usu_usuario like :USUAR' +
-        'IO'#13#10#13#10'UNION ALL'#13#10#13#10'SELECT'#13#10'    YEAR(CarVe_FechaRecaudacion) AS p' +
-        'eriodo,'#13#10'    Pre_CodigoCatastral,'#13#10'    CarVe_NumTitulo AS NumTit' +
-        'ulo,'#13#10'    CarVe_Nombres AS Nombres,'#13#10'    CASE '#13#10'        WHEN Car' +
-        'Ve_CI <> '#39'0000000000'#39' AND CarVe_CI <> '#39#39' THEN CarVe_CI'#13#10'        ' +
-        'ELSE CarVe_RUC'#13#10'    END AS Cedula_RUC,'#13#10'    CarVe_IPU AS IPU,'#13#10' ' +
-        '   CarVe_TasaAdministrativa AS TasaAdministrativa,'#13#10#13#10'CarVe_IPU ' +
-        '+ CarVe_TasaAdministrativa + CarVe_SolNoEdif + CarVe_ConstObsole' +
-        'ta + '#13#10'CarVe_SNERecargo + CarVe_Valor1 + CarVe_Valor2 AS '#39'OTROS_' +
-        'FOND_PROPIOS'#39','#13#10#13#10'    CarVe_Bomberos + CarVe_ViviendaRural + Car' +
-        'Ve_EstablecEducativos AS '#39'BOMBEROS_FOND_AJENOS'#39','#13#10#13#10'    Carve_Va' +
-        'lor1 AS Valor1,'#13#10'    Carve_Valor2 AS Valor2,'#13#10'    CarVe_ValorEmi' +
-        'tido AS ValorEmitido,'#13#10'    CarVe_Descuento AS Descuento,'#13#10'    Ca' +
-        'rVe_Recargo AS Recargo,'#13#10'    CarVe_Interes AS Interes,'#13#10'    CarV' +
-        'e_FechaRecaudacion AS FechaRecaudacion'#13#10'FROM [CARTERA_VENCIDA]'#13#10 +
-        'WHERE CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'and RIGHT(RTRIM(CarVe_NumTitul' +
-        'o), 2) = '#39'PU'#39#13#10'AND CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE A' +
-        'ND :FECHA_HASTA'#13#10'AND Usu_usuario like :USUARIO'#13#10#13#10') AS CombinedR' +
-        'esults'#13#10'ORDER BY FechaRecaudacion ASC'
+        'TitPr_FechaEmision) AS periodo,'#13#10'    Pre_CodigoCatastral,'#13#10'    T' +
+        'itPr_NumTitulo AS NumTitulo,'#13#10'    TitPr_Nombres AS Nombres,'#13#10'   ' +
+        ' Titpr_RUC_CI AS Cedula_RUC,'#13#10'    TitPr_IPU AS IPU,'#13#10'    TitPr_T' +
+        'asaAdministrativa AS TasaAdministrativa,'#13#10#13#10'TitPr_IPU + TitPr_Ta' +
+        'saAdministrativa + TitPr_SolNoEdif + TitPr_ConstObsoleta + '#13#10'Tit' +
+        'Pr_SNERecargo + TitPr_Valor1 + TitPr_Valor2 AS '#39'OTROS_FOND_PROPI' +
+        'OS'#39','#13#10#13#10#13#10#13#10'    TitPr_Bomberos AS '#39'BOMBEROS_FOND_AJENOS'#39','#13#10'    T' +
+        'itPr_Valor1 AS Valor1,'#13#10'    TitPr_Valor2 AS Valor2,'#13#10'    TitPr_V' +
+        'alorEmitido AS ValorEmitido,'#13#10'    TitPr_Descuento AS Descuento,'#13 +
+        #10'    TitPr_Recargo AS Recargo,'#13#10'    TitPr_Interes AS Interes,'#13#10' ' +
+        '   TitPr_FechaRecaudacion AS FechaRecaudacion,'#13#10#9'TitPr_FechaEmis' +
+        'ion AS FechaEmision'#13#10'FROM TITULOS_PREDIO'#13#10'WHERE TitPr_Estado IN ' +
+        '('#39'C'#39', '#39'Q'#39')'#13#10'    AND RIGHT(RTRIM(TitPr_NumTitulo), 2) = '#39'PU'#39#13#10'   ' +
+        ' AND TitPr_FechaRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_HAST' +
+        'A'#13#10'    AND Usu_usuario like :USUARIO'#13#10#13#10'UNION ALL'#13#10#13#10'SELECT'#13#10'   ' +
+        ' YEAR(CarVe_FechaEmision) AS periodo,'#13#10'    Pre_CodigoCatastral,'#13 +
+        #10'    CarVe_NumTitulo AS NumTitulo,'#13#10'    CarVe_Nombres AS Nombres' +
+        ','#13#10'    CASE '#13#10'        WHEN CarVe_CI <> '#39'0000000000'#39' AND CarVe_CI' +
+        ' <> '#39#39' THEN CarVe_CI'#13#10'        ELSE CarVe_RUC'#13#10'    END AS Cedula_' +
+        'RUC,'#13#10'    CarVe_IPU AS IPU,'#13#10'    CarVe_TasaAdministrativa AS Tas' +
+        'aAdministrativa,'#13#10#13#10'CarVe_IPU + CarVe_TasaAdministrativa + CarVe' +
+        '_SolNoEdif + CarVe_ConstObsoleta + '#13#10'CarVe_SNERecargo + CarVe_Va' +
+        'lor1 + CarVe_Valor2 AS '#39'OTROS_FOND_PROPIOS'#39','#13#10#13#10'    CarVe_Bomber' +
+        'os + CarVe_ViviendaRural + CarVe_EstablecEducativos AS '#39'BOMBEROS' +
+        '_FOND_AJENOS'#39','#13#10#13#10'    Carve_Valor1 AS Valor1,'#13#10'    Carve_Valor2 ' +
+        'AS Valor2,'#13#10'    CarVe_ValorEmitido AS ValorEmitido,'#13#10'    CarVe_D' +
+        'escuento AS Descuento,'#13#10'    CarVe_Recargo AS Recargo,'#13#10'    CarVe' +
+        '_Interes AS Interes,'#13#10'    CarVe_FechaRecaudacion AS FechaRecauda' +
+        'cion,'#13#10#9'CarVe_FechaEmision AS FechaEmision'#13#10'FROM [CARTERA_VENCID' +
+        'A]'#13#10'WHERE CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'and RIGHT(RTRIM(CarVe_NumT' +
+        'itulo), 2) = '#39'PU'#39#13#10'AND CarVe_FechaRecaudacion BETWEEN :FECHA_DES' +
+        'DE AND :FECHA_HASTA'#13#10'AND Usu_usuario like :USUARIO'#13#10#13#10') AS Combi' +
+        'nedResults'#13#10'ORDER BY periodo DESC, NumTitulo DESC;'
     end
     item
       Alias = 'CABECERA'
