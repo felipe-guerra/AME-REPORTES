@@ -743,7 +743,7 @@ object TRpReport
   end
   object TRpSection1: TRpSection
     Width = 16890
-    Height = 1545
+    Height = 2550
     SubReport = TRpSubReport0
     ChangeBool = False
     PageRepeat = False
@@ -751,6 +751,9 @@ object TRpReport
     AlignBottom = False
     SectionType = rpsecpheader
     Components = <
+      item
+        Component = TRpShape2
+      end
       item
         Component = TRpShape4
       end
@@ -771,6 +774,54 @@ object TRpReport
       end
       item
         Component = TRpExpression10
+      end
+      item
+        Component = TRpLabel5
+      end
+      item
+        Component = TRpLabel8
+      end
+      item
+        Component = TRpLabel9
+      end
+      item
+        Component = TRpLabel10
+      end
+      item
+        Component = TRpLabel11
+      end
+      item
+        Component = TRpLabel13
+      end
+      item
+        Component = TRpLabel15
+      end
+      item
+        Component = TRpLabel16
+      end
+      item
+        Component = TRpLabel17
+      end
+      item
+        Component = TRpLabel18
+      end
+      item
+        Component = TRpLabel19
+      end
+      item
+        Component = TRpLabel21
+      end
+      item
+        Component = TRpLabel22
+      end
+      item
+        Component = TRpShape1
+      end
+      item
+        Component = TRpLabel23
+      end
+      item
+        Component = TRpLabel25
       end>
     ExternalTable = 'REPMAN_REPORTS'
     ExternalField = 'REPORT'
@@ -943,7 +994,7 @@ object TRpReport
   end
   object TRpSection9: TRpSection
     Width = 16890
-    Height = 980
+    Height = 120
     SubReport = TRpSubReport0
     GroupName = 'LOGIN'
     ChangeBool = False
@@ -951,55 +1002,7 @@ object TRpReport
     SkipPage = False
     AlignBottom = False
     SectionType = rpsecgheader
-    Components = <
-      item
-        Component = TRpShape2
-      end
-      item
-        Component = TRpLabel5
-      end
-      item
-        Component = TRpLabel19
-      end
-      item
-        Component = TRpLabel23
-      end
-      item
-        Component = TRpLabel25
-      end
-      item
-        Component = TRpLabel27
-      end
-      item
-        Component = TRpLabel28
-      end
-      item
-        Component = TRpLabel29
-      end
-      item
-        Component = TRpLabel30
-      end
-      item
-        Component = TRpLabel31
-      end
-      item
-        Component = TRpLabel32
-      end
-      item
-        Component = TRpLabel33
-      end
-      item
-        Component = TRpLabel34
-      end
-      item
-        Component = TRpLabel35
-      end
-      item
-        Component = TRpLabel36
-      end
-      item
-        Component = TRpLabel26
-      end>
+    Components = <>
     ExternalTable = 'REPMAN_REPORTS'
     ExternalField = 'REPORT'
     ExternalSearchField = 'REPORT_NAME'
@@ -1071,17 +1074,6 @@ object TRpReport
     ExportDisplayFormat = ''
     AgIniValue = '0'
     ExportExpression = ''
-  end
-  object TRpShape2: TRpShape
-    Width = 13100
-    Height = 100
-    PosX = 3000
-    PosY = 340
-    Shape = rpsHorzLine
-    PenWidth = 0
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
   end
   object TRpExpression15: TRpExpression
     Width = 8160
@@ -1318,258 +1310,6 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     WideText = 'BOLET'#205'N DIARIO DE RECAUDACIONES'
-  end
-  object TRpLabel5: TRpLabel
-    Width = 1701
-    Height = 220
-    PosX = 5175
-    PosY = 62
-    Type1Font = poHelvetica
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'EMISION'
-  end
-  object TRpLabel23: TRpLabel
-    Width = 2660
-    Height = 220
-    PosX = 10800
-    PosY = 62
-    Type1Font = poHelvetica
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'NUEVOS INGRESOS'
-  end
-  object TRpLabel19: TRpLabel
-    Width = 1701
-    Height = 227
-    PosX = 800
-    PosY = 240
-    Type1Font = poHelvetica
-    FontStyle = 1
-    Alignment = 2
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'RUBROS'
-  end
-  object TRpLabel27: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 4940
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'INGRESO ACUMULADO'
-  end
-  object TRpLabel28: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 5980
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'BAJAS DIA'
-  end
-  object TRpLabel29: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 7020
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'BAJAS ACUMULADA'
-  end
-  object TRpLabel30: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 8040
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'SALDO'
-  end
-  object TRpLabel31: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 10580
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'COBRO DIA'
-  end
-  object TRpLabel32: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 11600
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'COBRO ACUMULADO'
-  end
-  object TRpLabel33: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 12640
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'BAJAS DIA'
-  end
-  object TRpLabel34: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 13680
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'BAJAS ACUMULADA'
-  end
-  object TRpLabel35: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 14700
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'SALDO NUEVO'
-  end
-  object TRpLabel36: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 9540
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'EMISION NUEVO'
-  end
-  object TRpLabel25: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 2880
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'EMITIDO'
-  end
-  object TRpLabel26: TRpLabel
-    Width = 1077
-    Height = 255
-    PosX = 3920
-    PosY = 460
-    Type1Font = poHelvetica
-    FontSize = 7
-    FontStyle = 1
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'INGRESO DIA'
   end
   object TRpShape0: TRpShape
     Width = 16095
@@ -4373,5 +4113,278 @@ object TRpReport
     ExportDisplayFormat = ''
     AgIniValue = '0'
     ExportExpression = ''
+  end
+  object TRpLabel5: TRpLabel
+    Width = 1701
+    Height = 227
+    PosX = 800
+    PosY = 1850
+    Type1Font = poHelvetica
+    FontStyle = 1
+    Alignment = 2
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'RUBROS'
+  end
+  object TRpLabel8: TRpLabel
+    Width = 1077
+    Height = 255
+    PosX = 2880
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'EMITIDO'
+  end
+  object TRpLabel9: TRpLabel
+    Width = 1077
+    Height = 255
+    PosX = 3920
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'INGRESO DIA'
+  end
+  object TRpLabel10: TRpLabel
+    Width = 1050
+    Height = 345
+    PosX = 4935
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'INGRESO ACUMULADO'
+  end
+  object TRpLabel11: TRpLabel
+    Width = 1077
+    Height = 255
+    PosX = 5980
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'BAJAS DIA'
+  end
+  object TRpLabel13: TRpLabel
+    Width = 1035
+    Height = 345
+    PosX = 7020
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'BAJAS ACUMULADA'
+  end
+  object TRpLabel15: TRpLabel
+    Width = 1077
+    Height = 255
+    PosX = 8040
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'SALDO'
+  end
+  object TRpLabel16: TRpLabel
+    Width = 1077
+    Height = 255
+    PosX = 9540
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'EMISION NUEVO'
+  end
+  object TRpLabel17: TRpLabel
+    Width = 1077
+    Height = 255
+    PosX = 10580
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'COBRO DIA'
+  end
+  object TRpLabel18: TRpLabel
+    Width = 1050
+    Height = 345
+    PosX = 11595
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'COBRO ACUMULADO'
+  end
+  object TRpLabel19: TRpLabel
+    Width = 1077
+    Height = 255
+    PosX = 12640
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'BAJAS DIA'
+  end
+  object TRpLabel21: TRpLabel
+    Width = 1035
+    Height = 345
+    PosX = 13680
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'BAJAS ACUMULADA'
+  end
+  object TRpLabel22: TRpLabel
+    Width = 1077
+    Height = 255
+    PosX = 14700
+    PosY = 2070
+    Type1Font = poHelvetica
+    FontSize = 7
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'SALDO NUEVO'
+  end
+  object TRpShape1: TRpShape
+    Width = 13100
+    Height = 100
+    PosX = 3000
+    PosY = 1950
+    Shape = rpsHorzLine
+    PenWidth = 0
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpLabel23: TRpLabel
+    Width = 2660
+    Height = 220
+    PosX = 10800
+    PosY = 1672
+    Type1Font = poHelvetica
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'NUEVOS INGRESOS'
+  end
+  object TRpLabel25: TRpLabel
+    Width = 1701
+    Height = 220
+    PosX = 5175
+    PosY = 1672
+    Type1Font = poHelvetica
+    FontStyle = 1
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'EMISION'
+  end
+  object TRpShape2: TRpShape
+    Width = 15975
+    Height = 930
+    PosX = 120
+    PosY = 1605
+    PenWidth = 0
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
   end
 end

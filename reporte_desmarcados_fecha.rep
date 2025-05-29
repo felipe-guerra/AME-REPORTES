@@ -189,7 +189,7 @@ object TRpReport
   end
   object TRpSection1: TRpSection
     Width = 11460
-    Height = 1485
+    Height = 1755
     SubReport = TRpSubReport0
     ChangeBool = False
     PageRepeat = False
@@ -217,6 +217,24 @@ object TRpReport
       end
       item
         Component = TRpExpression1
+      end
+      item
+        Component = TRpLabel0
+      end
+      item
+        Component = TRpLabel1
+      end
+      item
+        Component = TRpLabel2
+      end
+      item
+        Component = TRpLabel3
+      end
+      item
+        Component = TRpLabel4
+      end
+      item
+        Component = TRpLabel5
       end>
     ExternalTable = 'REPMAN_REPORTS'
     ExternalField = 'REPORT'
@@ -371,7 +389,7 @@ object TRpReport
   end
   object TRpSection9: TRpSection
     Width = 11460
-    Height = 585
+    Height = 45
     SubReport = TRpSubReport0
     GroupName = 'LOGIN'
     ChangeBool = False
@@ -379,25 +397,7 @@ object TRpReport
     SkipPage = False
     AlignBottom = False
     SectionType = rpsecgheader
-    Components = <
-      item
-        Component = TRpLabel2
-      end
-      item
-        Component = TRpLabel3
-      end
-      item
-        Component = TRpLabel4
-      end
-      item
-        Component = TRpLabel5
-      end
-      item
-        Component = TRpLabel6
-      end
-      item
-        Component = TRpLabel7
-      end>
+    Components = <>
     ExternalTable = 'REPMAN_REPORTS'
     ExternalField = 'REPORT'
     ExternalSearchField = 'REPORT_NAME'
@@ -659,114 +659,6 @@ object TRpReport
     DoBeforePrint = ''
     DoAfterPrint = ''
   end
-  object TRpLabel2: TRpLabel
-    Width = 1425
-    Height = 225
-    PosX = 7580
-    PosY = 120
-    Type1Font = poHelvetica
-    FontSize = 8
-    FontStyle = 1
-    Alignment = 4
-    BidiModes.Strings = (
-      'BidiNo')
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'Usuario'
-  end
-  object TRpLabel3: TRpLabel
-    Width = 930
-    Height = 225
-    PosX = 0
-    PosY = 120
-    Type1Font = poHelvetica
-    FontSize = 8
-    FontStyle = 1
-    Alignment = 4
-    BidiModes.Strings = (
-      'BidiNo')
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'No.'
-  end
-  object TRpLabel4: TRpLabel
-    Width = 1605
-    Height = 240
-    PosX = 8960
-    PosY = 120
-    Type1Font = poHelvetica
-    FontSize = 8
-    FontStyle = 1
-    Alignment = 2
-    BidiModes.Strings = (
-      'BidiNo')
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'Fecha Desmarcado'
-  end
-  object TRpLabel5: TRpLabel
-    Width = 1620
-    Height = 225
-    PosX = 2645
-    PosY = 120
-    Type1Font = poHelvetica
-    FontSize = 8
-    FontStyle = 1
-    Alignment = 4
-    BidiModes.Strings = (
-      'BidiNo')
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'N'#250'mero T'#237'tulo'
-  end
-  object TRpLabel6: TRpLabel
-    Width = 1725
-    Height = 225
-    PosX = 920
-    PosY = 120
-    Type1Font = poHelvetica
-    FontSize = 8
-    FontStyle = 1
-    Alignment = 4
-    BidiModes.Strings = (
-      'BidiNo')
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'Clave Catastral'
-  end
-  object TRpLabel7: TRpLabel
-    Width = 3330
-    Height = 225
-    PosX = 4250
-    PosY = 120
-    Type1Font = poHelvetica
-    FontSize = 8
-    FontStyle = 1
-    Alignment = 4
-    BidiModes.Strings = (
-      'BidiNo')
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'Propietario'
-  end
   object TRpShape4: TRpShape
     Width = 10815
     Height = 105
@@ -832,5 +724,113 @@ object TRpReport
     ExportDisplayFormat = ''
     AgIniValue = '0'
     ExportExpression = ''
+  end
+  object TRpLabel0: TRpLabel
+    Width = 930
+    Height = 225
+    PosX = 240
+    PosY = 1500
+    Type1Font = poHelvetica
+    FontSize = 8
+    FontStyle = 1
+    Alignment = 4
+    BidiModes.Strings = (
+      'BidiNo')
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'No.'
+  end
+  object TRpLabel1: TRpLabel
+    Width = 1725
+    Height = 225
+    PosX = 1050
+    PosY = 1500
+    Type1Font = poHelvetica
+    FontSize = 8
+    FontStyle = 1
+    Alignment = 4
+    BidiModes.Strings = (
+      'BidiNo')
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Clave Catastral'
+  end
+  object TRpLabel2: TRpLabel
+    Width = 1620
+    Height = 225
+    PosX = 2775
+    PosY = 1500
+    Type1Font = poHelvetica
+    FontSize = 8
+    FontStyle = 1
+    Alignment = 4
+    BidiModes.Strings = (
+      'BidiNo')
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'N'#250'mero T'#237'tulo'
+  end
+  object TRpLabel3: TRpLabel
+    Width = 3330
+    Height = 225
+    PosX = 4380
+    PosY = 1500
+    Type1Font = poHelvetica
+    FontSize = 8
+    FontStyle = 1
+    Alignment = 4
+    BidiModes.Strings = (
+      'BidiNo')
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Propietario'
+  end
+  object TRpLabel4: TRpLabel
+    Width = 1425
+    Height = 225
+    PosX = 7710
+    PosY = 1500
+    Type1Font = poHelvetica
+    FontSize = 8
+    FontStyle = 1
+    Alignment = 4
+    BidiModes.Strings = (
+      'BidiNo')
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Usuario'
+  end
+  object TRpLabel5: TRpLabel
+    Width = 1605
+    Height = 240
+    PosX = 9090
+    PosY = 1500
+    Type1Font = poHelvetica
+    FontSize = 8
+    FontStyle = 1
+    Alignment = 2
+    BidiModes.Strings = (
+      'BidiNo')
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Fecha Desmarcado'
   end
 end

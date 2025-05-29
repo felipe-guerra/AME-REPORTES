@@ -182,7 +182,7 @@ object TRpReport
   end
   object TRpSection1: TRpSection
     Width = 11460
-    Height = 1470
+    Height = 1995
     SubReport = TRpSubReport0
     ChangeBool = False
     PageRepeat = False
@@ -190,6 +190,9 @@ object TRpReport
     AlignBottom = False
     SectionType = rpsecpheader
     Components = <
+      item
+        Component = TRpShape2
+      end
       item
         Component = TRpLabel0
       end
@@ -219,6 +222,24 @@ object TRpReport
       end
       item
         Component = TRpExpression8
+      end
+      item
+        Component = TRpLabel2
+      end
+      item
+        Component = TRpLabel4
+      end
+      item
+        Component = TRpLabel5
+      end
+      item
+        Component = TRpLabel6
+      end
+      item
+        Component = TRpLabel7
+      end
+      item
+        Component = TRpLabel8
       end>
     ExternalTable = 'REPMAN_REPORTS'
     ExternalField = 'REPORT'
@@ -448,7 +469,7 @@ object TRpReport
   end
   object TRpSection9: TRpSection
     Width = 11460
-    Height = 810
+    Height = 270
     SubReport = TRpSubReport0
     GroupName = 'LOGIN'
     ChangeBool = False
@@ -462,27 +483,6 @@ object TRpReport
       end
       item
         Component = TRpExpression1
-      end
-      item
-        Component = TRpShape8
-      end
-      item
-        Component = TRpLabel25
-      end
-      item
-        Component = TRpLabel26
-      end
-      item
-        Component = TRpLabel27
-      end
-      item
-        Component = TRpLabel28
-      end
-      item
-        Component = TRpLabel29
-      end
-      item
-        Component = TRpLabel30
       end>
     ExternalTable = 'REPMAN_REPORTS'
     ExternalField = 'REPORT'
@@ -919,108 +919,6 @@ object TRpReport
     AgIniValue = '0'
     ExportExpression = ''
   end
-  object TRpShape8: TRpShape
-    Width = 10815
-    Height = 465
-    PosX = 0
-    PosY = 225
-    PenWidth = 0
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-  end
-  object TRpLabel25: TRpLabel
-    Width = 915
-    Height = 225
-    PosX = 9780
-    PosY = 348
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'VALOR REBAJA'
-  end
-  object TRpLabel26: TRpLabel
-    Width = 1134
-    Height = 227
-    PosX = 8508
-    PosY = 348
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'NUMERO T'#205'TULO'
-  end
-  object TRpLabel27: TRpLabel
-    Width = 804
-    Height = 228
-    PosX = 7476
-    PosY = 348
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'RUC - CI'
-  end
-  object TRpLabel28: TRpLabel
-    Width = 1845
-    Height = 227
-    PosX = 2640
-    PosY = 348
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'APELLIDOS Y NOMBRES'
-  end
-  object TRpLabel29: TRpLabel
-    Width = 1417
-    Height = 227
-    PosX = 924
-    PosY = 348
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'COD. CATASTRAL'
-  end
-  object TRpLabel30: TRpLabel
-    Width = 855
-    Height = 240
-    PosX = 120
-    PosY = 345
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'Nro.'
-  end
   object TRpExpression15: TRpExpression
     Width = 5669
     Height = 225
@@ -1243,5 +1141,107 @@ object TRpReport
     ExportDisplayFormat = ''
     AgIniValue = '0'
     ExportExpression = ''
+  end
+  object TRpLabel2: TRpLabel
+    Width = 855
+    Height = 240
+    PosX = 120
+    PosY = 1620
+    Type1Font = poHelvetica
+    FontSize = 6
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Nro.'
+  end
+  object TRpLabel4: TRpLabel
+    Width = 1417
+    Height = 227
+    PosX = 924
+    PosY = 1623
+    Type1Font = poHelvetica
+    FontSize = 6
+    Alignment = 4
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'COD. CATASTRAL'
+  end
+  object TRpLabel5: TRpLabel
+    Width = 1845
+    Height = 227
+    PosX = 2640
+    PosY = 1623
+    Type1Font = poHelvetica
+    FontSize = 6
+    Alignment = 4
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'APELLIDOS Y NOMBRES'
+  end
+  object TRpShape2: TRpShape
+    Width = 10815
+    Height = 465
+    PosX = 0
+    PosY = 1500
+    PenWidth = 0
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpLabel6: TRpLabel
+    Width = 804
+    Height = 228
+    PosX = 7476
+    PosY = 1623
+    Type1Font = poHelvetica
+    FontSize = 6
+    Alignment = 4
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'RUC - CI'
+  end
+  object TRpLabel7: TRpLabel
+    Width = 1134
+    Height = 227
+    PosX = 8508
+    PosY = 1623
+    Type1Font = poHelvetica
+    FontSize = 6
+    Alignment = 4
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'NUMERO T'#205'TULO'
+  end
+  object TRpLabel8: TRpLabel
+    Width = 915
+    Height = 225
+    PosX = 9780
+    PosY = 1623
+    Type1Font = poHelvetica
+    FontSize = 6
+    Alignment = 4
+    WordWrap = True
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'VALOR REBAJA'
   end
 end
