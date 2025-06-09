@@ -55,7 +55,7 @@ object TRpReport
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
         'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'U'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion ASC'
+        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC'
     end
     item
       Alias = 'NUEVO_VALOR_2'
@@ -63,7 +63,7 @@ object TRpReport
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
         'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'U'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC'
+        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion ASC'
     end>
   DatabaseInfo = <
     item
@@ -194,9 +194,6 @@ object TRpReport
       end
       item
         Component = TRpExpression20
-      end
-      item
-        Component = TRpExpression18
       end
       item
         Component = TRpExpression15
@@ -459,9 +456,6 @@ object TRpReport
         Component = TRpExpression52
       end
       item
-        Component = TRpExpression53
-      end
-      item
         Component = TRpExpression57
       end
       item
@@ -570,9 +564,6 @@ object TRpReport
         Component = TRpExpression25
       end
       item
-        Component = TRpLabel8
-      end
-      item
         Component = TRpLabel12
       end
       item
@@ -643,9 +634,6 @@ object TRpReport
       end
       item
         Component = TRpLabel4
-      end
-      item
-        Component = TRpExpression23
       end
       item
         Component = TRpExpression27
@@ -1828,7 +1816,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    WideText = 'DETALLE DE TITULOS URBANOS COBRADOS'
+    WideText = 'DETALLE CONTABLE DE TITULOS URBANOS COBRADOS'
   end
   object TRpExpression0: TRpExpression
     Width = 1005
@@ -1922,107 +1910,6 @@ object TRpReport
     LFontName = 'Helvetica'
     Expression = 'NUEVO_VALOR_2.CoeDeE_Descripcion'
     DisplayFormat = ''
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression53: TRpExpression
-    Width = 816
-    Height = 228
-    PosX = 10230
-    PosY = 1657
-    Type1Font = poLinked
-    FontSize = 8
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '#,##0.00'
-    Aggregate = rpAgGeneral
-    GroupName = 'USUARIO'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.Bomberos'
-    DisplayFormat = '#,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpLabel8: TRpLabel
-    Width = 855
-    Height = 570
-    PosX = 10350
-    PosY = 225
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'BOMBEROS'
-  end
-  object TRpExpression18: TRpExpression
-    Width = 804
-    Height = 228
-    PosX = 10230
-    PosY = 127
-    Type1Font = poLinked
-    FontSize = 8
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '#,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.Bomberos'
-    DisplayFormat = '#,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression23: TRpExpression
-    Width = 804
-    Height = 228
-    PosX = 10230
-    PosY = 0
-    Type1Font = poLinked
-    FontSize = 8
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '#,##0.00'
-    Aggregate = rpAgGroup
-    GroupName = 'LOGIN'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.Bomberos'
-    DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
     ExportExpression = ''

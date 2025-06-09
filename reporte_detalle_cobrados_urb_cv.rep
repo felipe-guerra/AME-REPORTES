@@ -22,25 +22,22 @@ object TRpReport
         'SCE(CarVe_ConstObsoleta, 0) AS ConstObsoleta,'#13#10'    COALESCE(CarV' +
         'e_SNERecargo, 0) AS SNERecargo,'#13#10'    COALESCE(Carve_Valor1, 0) A' +
         'S Valor1,'#13#10'    COALESCE(Carve_Valor2, 0) AS Valor2,'#13#10#13#10'    -- Fo' +
-        'ndos'#13#10'    COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdministra' +
-        'tiva, 0) + COALESCE(CarVe_SolNoEdif, 0) +'#13#10'    COALESCE(CarVe_Co' +
-        'nstObsoleta, 0) + COALESCE(CarVe_SNERecargo, 0) +'#13#10'    COALESCE(' +
-        'Carve_Valor1, 0) + COALESCE(Carve_Valor2, 0) AS FONDOS_PROPIOS,'#13 +
-        #10#13#10'    COALESCE(CarVe_Bomberos, 0) AS Bomberos,'#13#10'    COALESCE(Ca' +
-        'rVe_Bomberos, 0) AS FONDOS_AJENOS,'#13#10#13#10'    COALESCE(CarVe_Interes' +
-        ', 0) AS Interes,'#13#10'    COALESCE(CarVe_Recargo, 0) AS Recargo,'#13#10#13#10 +
-        '    COALESCE(CarVe_ValorEmitido, 0) AS ValorEmitido,'#13#10#13#10'    -- T' +
-        'otal cobrado con inter'#233's y recargo incluidos'#13#10'    COALESCE(CarVe' +
-        '_IPU, 0) + COALESCE(CarVe_TasaAdministrativa, 0) + COALESCE(CarV' +
-        'e_SolNoEdif, 0) +'#13#10'    COALESCE(CarVe_ConstObsoleta, 0) + COALES' +
-        'CE(CarVe_SNERecargo, 0) +'#13#10'    COALESCE(Carve_Valor1, 0) + COALE' +
-        'SCE(Carve_Valor2, 0) +'#13#10'    COALESCE(CarVe_Bomberos, 0) + COALES' +
-        'CE(CarVe_Interes, 0) + COALESCE(CarVe_Recargo, 0) AS ValorTCobra' +
-        'do,'#13#10#13#10'    CarVe_FechaRecaudacion AS FechaRecaudacion'#13#10'FROM CART' +
-        'ERA_VENCIDA'#13#10'WHERE CarVe_Estado IN ('#39'C'#39','#39'Q'#39')'#13#10'  AND RIGHT(RTRIM(' +
-        'CarVe_NumTitulo), 2) = '#39'PU'#39#13#10'    AND CarVe_FechaRecaudacion BETW' +
-        'EEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'ORDER BY CarVe_FechaEmision D' +
-        'ESC;'#13#10
+        'ndos'#13#10'   COALESCE(CarVe_SolNoEdif, 0) +'#13#10'    COALESCE(CarVe_Cons' +
+        'tObsoleta, 0) + COALESCE(CarVe_SNERecargo, 0) AS FONDOS_PROPIOS,' +
+        #13#10#13#10'    COALESCE(CarVe_Bomberos, 0) AS Bomberos,'#13#10#13#10'    COALESCE' +
+        '(CarVe_Interes, 0) AS Interes,'#13#10'    COALESCE(CarVe_Recargo, 0) A' +
+        'S Recargo,'#13#10#13#10'    COALESCE(CarVe_ValorEmitido, 0) AS ValorEmitid' +
+        'o,'#13#10#13#10'    -- Total cobrado con inter'#233's y recargo incluidos'#13#10'    ' +
+        'COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdministrativa, 0) +' +
+        ' COALESCE(CarVe_SolNoEdif, 0) +'#13#10'    COALESCE(CarVe_ConstObsolet' +
+        'a, 0) + COALESCE(CarVe_SNERecargo, 0) +'#13#10'    COALESCE(Carve_Valo' +
+        'r1, 0) + COALESCE(Carve_Valor2, 0) +'#13#10'    COALESCE(CarVe_Bombero' +
+        's, 0) + COALESCE(CarVe_Interes, 0) + COALESCE(CarVe_Recargo, 0) ' +
+        'AS ValorTCobrado,'#13#10#13#10'    CarVe_FechaRecaudacion AS FechaRecaudac' +
+        'ion'#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE CarVe_Estado IN ('#39'C'#39','#39'Q'#39')'#13#10'  AN' +
+        'D RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PU'#39#13#10'    AND CarVe_FechaRe' +
+        'caudacion BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'ORDER BY CarVe_' +
+        'FechaEmision DESC;'#13#10
     end
     item
       Alias = 'CABECERA'
@@ -56,7 +53,8 @@ object TRpReport
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
         'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'U'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion ASC'
+        ' 0'#13#10#9' and CoeDeE_Descripcion != '#39'bomberos exen Urbano'#39#13#10#9' ORDER ' +
+        'BY CoeDeE_Descripcion DESC'
     end
     item
       Alias = 'NUEVO_VALOR_2'
@@ -64,7 +62,8 @@ object TRpReport
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
         'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'U'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC'
+        ' 0'#13#10#9' and CoeDeE_Descripcion != '#39'bomberos exen Urbano'#39#13#10#9' ORDER ' +
+        'BY CoeDeE_Descripcion ASC'
     end>
   DatabaseInfo = <
     item
@@ -885,7 +884,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.FONDOS_AJENOS'
+    Expression = 'DATOS.Bomberos'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1134,7 +1133,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.FONDOS_AJENOS'
+    Expression = 'DATOS.Bomberos'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1337,7 +1336,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.FONDOS_AJENOS'
+    Expression = 'DATOS.Bomberos'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1705,7 +1704,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    WideText = 'BOMBEROS + FOND. AJENOS'
+    WideText = 'BOMBEROS'
   end
   object TRpLabel16: TRpLabel
     Width = 855
@@ -1838,7 +1837,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    WideText = 'DETALLE DE TITULOS URBANOS COBRADOS'
+    WideText = 'DETALLE CONTABLE DE TITULOS URBANOS COBRADOS'
   end
   object TRpExpression0: TRpExpression
     Width = 990

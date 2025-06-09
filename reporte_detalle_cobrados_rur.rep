@@ -46,7 +46,7 @@ object TRpReport
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
         'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'R'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion ASC'
+        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC'
     end
     item
       Alias = 'NUEVO_VALOR_2'
@@ -54,7 +54,7 @@ object TRpReport
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
         'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'R'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC'
+        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion ASC'
     end>
   DatabaseInfo = <
     item
@@ -164,12 +164,6 @@ object TRpReport
       end
       item
         Component = TRpExpression7
-      end
-      item
-        Component = TRpExpression9
-      end
-      item
-        Component = TRpExpression10
       end
       item
         Component = TRpExpression11
@@ -432,12 +426,6 @@ object TRpReport
         Component = TRpExpression48
       end
       item
-        Component = TRpExpression49
-      end
-      item
-        Component = TRpExpression50
-      end
-      item
         Component = TRpExpression51
       end
       item
@@ -516,12 +504,6 @@ object TRpReport
         Component = TRpLabel5
       end
       item
-        Component = TRpLabel6
-      end
-      item
-        Component = TRpLabel7
-      end
-      item
         Component = TRpLabel11
       end
       item
@@ -595,12 +577,6 @@ object TRpReport
       end
       item
         Component = TRpExpression35
-      end
-      item
-        Component = TRpExpression38
-      end
-      item
-        Component = TRpExpression39
       end
       item
         Component = TRpExpression40
@@ -815,60 +791,6 @@ object TRpReport
     AgIniValue = '0'
     ExportExpression = ''
   end
-  object TRpExpression9: TRpExpression
-    Width = 804
-    Height = 228
-    PosX = 5953
-    PosY = 120
-    Type1Font = poLinked
-    FontSize = 8
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '#,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.FONDOS_PROPIOS'
-    DisplayFormat = '#,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression10: TRpExpression
-    Width = 804
-    Height = 228
-    PosX = 6917
-    PosY = 120
-    Type1Font = poLinked
-    FontSize = 8
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '#,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.FONDOS_AJENOS'
-    DisplayFormat = '#,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
   object TRpExpression8: TRpExpression
     Width = 804
     Height = 228
@@ -1060,64 +982,6 @@ object TRpReport
     AgIniValue = '0'
     ExportExpression = ''
   end
-  object TRpExpression38: TRpExpression
-    Width = 804
-    Height = 228
-    PosX = 5953
-    PosY = 0
-    Type1Font = poLinked
-    FontSize = 9
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '#,##0.00'
-    Aggregate = rpAgGroup
-    GroupName = 'LOGIN'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.FONDOS_PROPIOS'
-    DisplayFormat = '#,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression39: TRpExpression
-    Width = 804
-    Height = 228
-    PosX = 6917
-    PosY = 0
-    Type1Font = poLinked
-    FontSize = 9
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '#,##0.00'
-    Aggregate = rpAgGroup
-    GroupName = 'LOGIN'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.FONDOS_AJENOS'
-    DisplayFormat = '#,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
   object TRpExpression40: TRpExpression
     Width = 804
     Height = 228
@@ -1258,64 +1122,6 @@ object TRpReport
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
     Expression = 'DATOS.TasaAdministrativa'
-    DisplayFormat = '#,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression49: TRpExpression
-    Width = 816
-    Height = 228
-    PosX = 5953
-    PosY = 1657
-    Type1Font = poLinked
-    FontSize = 8
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '#,##0.00'
-    Aggregate = rpAgGeneral
-    GroupName = 'USUARIO'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.FONDOS_PROPIOS'
-    DisplayFormat = '#,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression50: TRpExpression
-    Width = 816
-    Height = 228
-    PosX = 6917
-    PosY = 1657
-    Type1Font = poLinked
-    FontSize = 8
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '#,##0.00'
-    Aggregate = rpAgGeneral
-    GroupName = 'USUARIO'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.FONDOS_AJENOS'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1653,38 +1459,6 @@ object TRpReport
     LFontName = 'Helvetica'
     WideText = 'SERVI. ADMIN.'
   end
-  object TRpLabel6: TRpLabel
-    Width = 855
-    Height = 570
-    PosX = 6270
-    PosY = 340
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'OTROS FOND. PROPIOS'
-  end
-  object TRpLabel7: TRpLabel
-    Width = 855
-    Height = 570
-    PosX = 7245
-    PosY = 340
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'BOMBEROS + FOND. AJENOS'
-  end
   object TRpLabel16: TRpLabel
     Width = 855
     Height = 570
@@ -1816,7 +1590,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    WideText = 'DETALLE DE TITULOS RURALES COBRADOS'
+    WideText = 'DETALLE CONTABLE DE TITULOS RURALES COBRADOS'
   end
   object TRpExpression0: TRpExpression
     Width = 1005

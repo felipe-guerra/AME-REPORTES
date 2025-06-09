@@ -27,28 +27,26 @@ object TRpReport
         'r2,'#13#10'    COALESCE(CarVe_Bomberos, 0) AS Bomberos,'#13#10'    COALESCE(' +
         'CarVe_ViviendaRural, 0) AS ViviendaRural,'#13#10'    COALESCE(CarVe_Es' +
         'tablecEducativos, 0) AS EstablecEducativos,'#13#10'    COALESCE(CarVe_' +
-        'Interes, 0) AS Interes,'#13#10#13#10'    -- Fondos'#13#10'    COALESCE(CarVe_IPU' +
-        ', 0) + COALESCE(CarVe_TasaAdministrativa, 0) + COALESCE(CarVe_Ma' +
+        'Interes, 0) AS Interes,'#13#10#13#10'    -- Fondos'#13#10'     COALESCE(CarVe_Ma' +
         'gisterio, 0) +'#13#10'    COALESCE(CarVe_EducacionElemental, 0) + COAL' +
         'ESCE(CarVe_MedicinaRural, 0) +'#13#10'    COALESCE(CarVe_OtrosAdiciona' +
-        'les, 0) + COALESCE(CarVe_RecoleccionBasura, 0) +'#13#10'    COALESCE(C' +
-        'arve_Valor1, 0) + COALESCE(Carve_Valor2, 0) AS FONDOS_PROPIOS,'#13#10 +
-        #13#10'    COALESCE(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaRural' +
-        ', 0) + COALESCE(CarVe_EstablecEducativos, 0) AS FONDOS_AJENOS,'#13#10 +
-        #13#10'    COALESCE(CarVe_ValorEmitido, 0) AS ValorEmitido,'#13#10#13#10'    --' +
-        ' Total cobrado con inter'#233's'#13#10'    COALESCE(CarVe_IPU, 0) + COALESC' +
-        'E(CarVe_TasaAdministrativa, 0) + COALESCE(CarVe_Magisterio, 0) +' +
-        #13#10'    COALESCE(CarVe_EducacionElemental, 0) + COALESCE(CarVe_Med' +
-        'icinaRural, 0) +'#13#10'    COALESCE(CarVe_OtrosAdicionales, 0) + COAL' +
-        'ESCE(CarVe_RecoleccionBasura, 0) +'#13#10'    COALESCE(Carve_Valor1, 0' +
-        ') + COALESCE(Carve_Valor2, 0) +'#13#10'    COALESCE(CarVe_Bomberos, 0)' +
-        ' + COALESCE(CarVe_ViviendaRural, 0) +'#13#10'    COALESCE(CarVe_Establ' +
-        'ecEducativos, 0) + COALESCE(CarVe_Interes, 0) AS ValorTCobrado,'#13 +
-        #10#13#10'    CarVe_FechaRecaudacion AS FechaRecaudacion'#13#10'FROM CARTERA_' +
-        'VENCIDA'#13#10'WHERE CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND RIGHT(RTRIM(Car' +
-        'Ve_NumTitulo), 2) = '#39'PR'#39#13#10'    AND CarVe_FechaRecaudacion BETWEEN' +
-        ' :FECHA_DESDE AND :FECHA_HASTA'#13#10'ORDER BY CarVe_FechaEmision DESC' +
-        ';'#13#10
+        'les, 0) + COALESCE(CarVe_RecoleccionBasura, 0) AS FONDOS_PROPIOS' +
+        ','#13#10#13#10'    COALESCE(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaRu' +
+        'ral, 0) + COALESCE(CarVe_EstablecEducativos, 0) AS FONDOS_AJENOS' +
+        ','#13#10#13#10'    COALESCE(CarVe_ValorEmitido, 0) AS ValorEmitido,'#13#10#13#10'   ' +
+        ' -- Total cobrado con inter'#233's'#13#10'    COALESCE(CarVe_IPU, 0) + COAL' +
+        'ESCE(CarVe_TasaAdministrativa, 0) + COALESCE(CarVe_Magisterio, 0' +
+        ') +'#13#10'    COALESCE(CarVe_EducacionElemental, 0) + COALESCE(CarVe_' +
+        'MedicinaRural, 0) +'#13#10'    COALESCE(CarVe_OtrosAdicionales, 0) + C' +
+        'OALESCE(CarVe_RecoleccionBasura, 0) +'#13#10'    COALESCE(Carve_Valor1' +
+        ', 0) + COALESCE(Carve_Valor2, 0) +'#13#10'    COALESCE(CarVe_Bomberos,' +
+        ' 0) + COALESCE(CarVe_ViviendaRural, 0) +'#13#10'    COALESCE(CarVe_Est' +
+        'ablecEducativos, 0) + COALESCE(CarVe_Interes, 0) +'#13#10'    COALESCE' +
+        '(CarVe_Recargo, 0) AS ValorTCobrado,'#13#10#13#10'    CarVe_FechaRecaudaci' +
+        'on AS FechaRecaudacion'#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE CarVe_Estado' +
+        ' IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10' ' +
+        '   AND CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_HA' +
+        'STA'#13#10'ORDER BY CarVe_FechaEmision DESC;'#13#10
     end
     item
       Alias = 'CABECERA'
@@ -64,7 +62,8 @@ object TRpReport
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
         'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'R'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion ASC'
+        ' 0'#13#10#9' and CoeDeE_Descripcion != '#39'bomberos exen Rural'#39#13#10#9' ORDER B' +
+        'Y CoeDeE_Descripcion DESC'
     end
     item
       Alias = 'NUEVO_VALOR_2'
@@ -72,7 +71,8 @@ object TRpReport
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
         'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'R'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC'
+        ' 0'#13#10#9' and CoeDeE_Descripcion != '#39'bomberos exen Rural'#39#13#10#9' ORDER B' +
+        'Y CoeDeE_Descripcion ASC'
     end>
   DatabaseInfo = <
     item
@@ -1834,7 +1834,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    WideText = 'DETALLE DE TITULOS RURALES COBRADOS'
+    WideText = 'DETALLE CONTABLE DE TITULOS RURALES COBRADOS'
   end
   object TRpExpression0: TRpExpression
     Width = 1110
