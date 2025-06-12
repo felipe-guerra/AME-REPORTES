@@ -45,17 +45,19 @@ object TRpReport
       Alias = 'NUEVO_VALOR_1'
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
-        'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
-        'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'U'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion ASC'
+        'select top 1 CoeDeE_Codigo, CoeDeE_Descripcion'#13#10'from  [PARAMETRO' +
+        'S_GENERALES]'#13#10'WHERE CoeDeE_Estado = '#39'U'#39#13#10'AND CoeDeE_Valor = 0'#13#10' ' +
+        'and (CoeDeE_Descripcion != '#39'bomberos exen Urbano'#39#13#10' or CoeDeE_De' +
+        'scripcion is null)'#13#10'ORDER BY CoeDeE_Codigo ASC'
     end
     item
       Alias = 'NUEVO_VALOR_2'
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
-        'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
-        'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'U'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC'
+        'select top 1 CoeDeE_Codigo, CoeDeE_Descripcion'#13#10'from  [PARAMETRO' +
+        'S_GENERALES]'#13#10'WHERE CoeDeE_Estado = '#39'U'#39#13#10'AND CoeDeE_Valor = 0'#13#10' ' +
+        'and (CoeDeE_Descripcion != '#39'bomberos exen Urbano'#39#13#10' or CoeDeE_De' +
+        'scripcion is null)'#13#10'ORDER BY CoeDeE_Codigo DESC'
     end>
   DatabaseInfo = <
     item
