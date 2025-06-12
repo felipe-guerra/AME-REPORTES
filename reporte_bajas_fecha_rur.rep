@@ -57,6 +57,26 @@ object TRpReport
         ', '#39' HASTA: '#39', FORMAT(:FECHA_HASTA, '#39'dd/MM/yyyy'#39')) AS Intervalo_F' +
         'echas'#13#10', FORMAT(GETDATE(), '#39'HH:mm:ss'#39') AS Hora'#13#10'FROM [dbo].[FICH' +
         'A_MUNICIPAL]'
+    end
+    item
+      Alias = 'NUEVO_VALOR_1'
+      DatabaseAlias = 'CNNREPORTE'
+      SQL = 
+        'select top 1 CoeDeE_Codigo, CoeDeE_Descripcion'#13#10' from  [PARAMETR' +
+        'OS_GENERALES]'#13#10'WHERE CoeDeE_Estado = '#39'R'#39#13#10'AND CoeDeE_Valor = 0'#13#10 +
+        ' and (CoeDeE_Descripcion != '#39'bomberos exen Rural'#39' and CoeDeE_Des' +
+        'cripcion != '#39'Bomberos Rural'#39#13#10' or CoeDeE_Descripcion is null)'#13#10'o' +
+        'rder by CoeDeE_Codigo ASC'
+    end
+    item
+      Alias = 'NUEVO_VALOR_2'
+      DatabaseAlias = 'CNNREPORTE'
+      SQL = 
+        'select top 1 CoeDeE_Codigo, CoeDeE_Descripcion'#13#10' from  [PARAMETR' +
+        'OS_GENERALES]'#13#10'WHERE CoeDeE_Estado = '#39'R'#39#13#10'AND CoeDeE_Valor = 0'#13#10 +
+        ' and (CoeDeE_Descripcion != '#39'bomberos exen Rural'#39' and CoeDeE_Des' +
+        'cripcion != '#39'Bomberos Rural'#39#13#10' or CoeDeE_Descripcion is null)'#13#10'o' +
+        'rder by CoeDeE_Codigo DESC'
     end>
   DatabaseInfo = <
     item
@@ -285,12 +305,6 @@ object TRpReport
         Component = TRpLabel32
       end
       item
-        Component = TRpLabel33
-      end
-      item
-        Component = TRpLabel34
-      end
-      item
         Component = TRpLabel35
       end
       item
@@ -307,6 +321,12 @@ object TRpReport
       end
       item
         Component = TRpLabel40
+      end
+      item
+        Component = TRpExpression26
+      end
+      item
+        Component = TRpExpression27
       end>
     ExternalTable = 'REPMAN_REPORTS'
     ExternalField = 'REPORT'
@@ -2268,38 +2288,6 @@ object TRpReport
     LFontName = 'Helvetica'
     WideText = 'BOMBEROS + FOND. AJENOS'
   end
-  object TRpLabel33: TRpLabel
-    Width = 855
-    Height = 570
-    PosX = 8316
-    PosY = 1378
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'CEM1:'
-  end
-  object TRpLabel34: TRpLabel
-    Width = 855
-    Height = 570
-    PosX = 9131
-    PosY = 1378
-    Type1Font = poHelvetica
-    FontSize = 6
-    Alignment = 4
-    WordWrap = True
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'CEM2:'
-  end
   object TRpLabel35: TRpLabel
     Width = 855
     Height = 570
@@ -2405,5 +2393,55 @@ object TRpReport
     PrintCondition = ''
     DoBeforePrint = ''
     DoAfterPrint = ''
+  end
+  object TRpExpression26: TRpExpression
+    Width = 930
+    Height = 465
+    PosX = 8160
+    PosY = 1380
+    Type1Font = poHelvetica
+    FontSize = 6
+    Alignment = 4
+    WordWrap = True
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'NUEVO_VALOR_1.CoeDeE_Descripcion'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression27: TRpExpression
+    Width = 915
+    Height = 465
+    PosX = 9050
+    PosY = 1380
+    Type1Font = poHelvetica
+    FontSize = 6
+    Alignment = 4
+    WordWrap = True
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'NUEVO_VALOR_2.CoeDeE_Descripcion'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
   end
 end
