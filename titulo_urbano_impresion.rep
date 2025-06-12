@@ -41,36 +41,39 @@ object TRpReport
         'ecargo], 0), '#39'N2'#39', '#39'en-US'#39') AS TitPr_Recargo,'#13#10'FORMAT(ISNULL(tp.' +
         '[TitPr_Interes], 0), '#39'N2'#39', '#39'en-US'#39') AS TitPr_Interes,'#13#10'FORMAT(IS' +
         'NULL(tp.[TitPr_ValorTCobrado], 0), '#39'N2'#39', '#39'en-US'#39') AS TitPr_Valor' +
-        'TCobrado,'#13#10#13#10#13#10#13#10#13#10'    (SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FR' +
-        'OM [dbo].[PARAMETROS_GENERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'U'#39#13 +
-        #10'     AND CoeDeE_Valor = 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC) ' +
-        'AS Valor1_Nombre,'#13#10'    '#13#10'    CASE '#13#10'        WHEN (SELECT TOP 1 C' +
-        'oeDeE_Descripcion'#13#10'              FROM [dbo].[PARAMETROS_GENERALE' +
-        'S]'#13#10'              WHERE CoeDeE_Estado = '#39'U'#39#13#10'              AND C' +
-        'oeDeE_Valor = 0'#13#10#9#9#9'  ORDER BY CoeDeE_Descripcion DESC) IS NOT N' +
-        'ULL '#13#10'        THEN '#39'$'#39#13#10'        ELSE NULL'#13#10'    END AS Valor1_dol' +
-        'ar,'#13#10#13#10'    CASE'#13#10'        WHEN (SELECT TOP 1 CoeDeE_Descripcion'#13#10 +
-        '              FROM [dbo].[PARAMETROS_GENERALES]'#13#10'              W' +
-        'HERE CoeDeE_Estado = '#39'U'#39#13#10'              AND CoeDeE_Valor = 0'#13#10#9#9 +
-        #9'  ORDER BY CoeDeE_Descripcion DESC) IS NULL'#13#10'        THEN NULL'#13 +
-        #10'       ELSE FORMAT(ISNULL(tp.TitPr_Valor1, 0), '#39'N2'#39', '#39'en-US'#39')'#13#10 +
-        '    END AS TitPr_Valor1,'#13#10#9#13#10#13#10#13#10'    (SELECT TOP 1 CoeDeE_Descri' +
-        'pcion'#13#10'     FROM [dbo].[PARAMETROS_GENERALES]'#13#10'     WHERE CoeDeE' +
-        '_Estado = '#39'U'#39#13#10'     AND CoeDeE_Valor = 0'#13#10#9' ORDER BY CoeDeE_Desc' +
-        'ripcion ASC) AS Valor2_Nombre,'#13#10'    '#13#10'    CASE '#13#10'        WHEN (S' +
-        'ELECT TOP 1 CoeDeE_Descripcion'#13#10'              FROM [dbo].[PARAME' +
-        'TROS_GENERALES]'#13#10'              WHERE CoeDeE_Estado = '#39'U'#39#13#10'      ' +
-        '        AND CoeDeE_Valor = 0'#13#10#9#9#9'  ORDER BY CoeDeE_Descripcion A' +
-        'SC) IS NOT NULL '#13#10'        THEN '#39'$'#39#13#10'        ELSE NULL'#13#10'    END A' +
-        'S Valor2_dolar,'#13#10#13#10'    CASE'#13#10'        WHEN (SELECT TOP 1 CoeDeE_D' +
-        'escripcion'#13#10'              FROM [dbo].[PARAMETROS_GENERALES]'#13#10'   ' +
-        '           WHERE CoeDeE_Estado = '#39'U'#39#13#10'              AND CoeDeE_V' +
-        'alor = 0'#13#10#9#9#9'  ORDER BY CoeDeE_Descripcion ASC) IS NULL'#13#10'       ' +
-        ' THEN NULL'#13#10'        ELSE FORMAT(ISNULL(tp.TitPr_Valor2, 0.00), '#39 +
-        'N2'#39', '#39'en-US'#39')'#13#10'    END AS TitPr_Valor2'#13#10#13#10#13#10'FROM [dbo].[TITULOS_' +
-        'PREDIO] tp'#13#10'LEFT OUTER JOIN [dbo].[PREDIO] p '#13#10'    ON tp.Pre_Cod' +
-        'igoCatastral = p.Pre_CodigoCatastral'#13#10'WHERE tp.TitPr_NumTitulo =' +
-        ' :NUMTITULO'#13#10
+        'TCobrado,'#13#10#13#10#13#10#13#10#13#10'    (select top 1 CoeDeE_Descripcion'#13#10'from  [' +
+        'PARAMETROS_GENERALES]'#13#10'WHERE CoeDeE_Estado = '#39'U'#39#13#10'AND CoeDeE_Val' +
+        'or = 0'#13#10' and (CoeDeE_Descripcion != '#39'bomberos exen Urbano'#39#13#10' or ' +
+        'CoeDeE_Descripcion is null)'#13#10'ORDER BY CoeDeE_Codigo ASC) AS Valo' +
+        'r1_Nombre,'#13#10'    '#13#10'    CASE '#13#10'        WHEN (select top 1 CoeDeE_D' +
+        'escripcion'#13#10'from  [PARAMETROS_GENERALES]'#13#10'WHERE CoeDeE_Estado = ' +
+        #39'U'#39#13#10'AND CoeDeE_Valor = 0'#13#10' and (CoeDeE_Descripcion != '#39'bomberos' +
+        ' exen Urbano'#39#13#10' or CoeDeE_Descripcion is null)'#13#10'ORDER BY CoeDeE_' +
+        'Codigo ASC) IS NOT NULL '#13#10'        THEN '#39'$'#39#13#10'        ELSE NULL'#13#10' ' +
+        '   END AS Valor1_dolar,'#13#10#13#10'    CASE'#13#10'        WHEN (select top 1 ' +
+        'CoeDeE_Descripcion'#13#10'from  [PARAMETROS_GENERALES]'#13#10'WHERE CoeDeE_E' +
+        'stado = '#39'U'#39#13#10'AND CoeDeE_Valor = 0'#13#10' and (CoeDeE_Descripcion != '#39 +
+        'bomberos exen Urbano'#39#13#10' or CoeDeE_Descripcion is null)'#13#10'ORDER BY' +
+        ' CoeDeE_Codigo ASC) IS NULL'#13#10'        THEN NULL'#13#10'       ELSE FORM' +
+        'AT(ISNULL(tp.TitPr_Valor1, 0), '#39'N2'#39', '#39'en-US'#39')'#13#10'    END AS TitPr_' +
+        'Valor1,'#13#10#9#13#10#13#10#13#10'    (select top 1 CoeDeE_Descripcion'#13#10'from  [PAR' +
+        'AMETROS_GENERALES]'#13#10'WHERE CoeDeE_Estado = '#39'U'#39#13#10'AND CoeDeE_Valor ' +
+        '= 0'#13#10' and (CoeDeE_Descripcion != '#39'bomberos exen Urbano'#39#13#10' or Coe' +
+        'DeE_Descripcion is null)'#13#10'ORDER BY CoeDeE_Codigo DESC) AS Valor2' +
+        '_Nombre,'#13#10'    '#13#10'    CASE '#13#10'        WHEN (select top 1 CoeDeE_Des' +
+        'cripcion'#13#10'from  [PARAMETROS_GENERALES]'#13#10'WHERE CoeDeE_Estado = '#39'U' +
+        #39#13#10'AND CoeDeE_Valor = 0'#13#10' and (CoeDeE_Descripcion != '#39'bomberos e' +
+        'xen Urbano'#39#13#10' or CoeDeE_Descripcion is null)'#13#10'ORDER BY CoeDeE_Co' +
+        'digo DESC) IS NOT NULL '#13#10'        THEN '#39'$'#39#13#10'        ELSE NULL'#13#10'  ' +
+        '  END AS Valor2_dolar,'#13#10#13#10'    CASE'#13#10'        WHEN (select top 1 C' +
+        'oeDeE_Descripcion'#13#10'from  [PARAMETROS_GENERALES]'#13#10'WHERE CoeDeE_Es' +
+        'tado = '#39'U'#39#13#10'AND CoeDeE_Valor = 0'#13#10' and (CoeDeE_Descripcion != '#39'b' +
+        'omberos exen Urbano'#39#13#10' or CoeDeE_Descripcion is null)'#13#10'ORDER BY ' +
+        'CoeDeE_Codigo DESC) IS NULL'#13#10'        THEN NULL'#13#10'        ELSE FOR' +
+        'MAT(ISNULL(tp.TitPr_Valor2, 0.00), '#39'N2'#39', '#39'en-US'#39')'#13#10'    END AS Ti' +
+        'tPr_Valor2'#13#10#13#10#13#10'FROM [dbo].[TITULOS_PREDIO] tp'#13#10'LEFT OUTER JOIN ' +
+        '[dbo].[PREDIO] p '#13#10'    ON tp.Pre_CodigoCatastral = p.Pre_CodigoC' +
+        'atastral'#13#10'WHERE tp.TitPr_NumTitulo = :NUMTITULO'#13#10
     end
     item
       Alias = 'CABECERA'
