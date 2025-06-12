@@ -30,7 +30,7 @@ object TRpReport
         'ROM [CARTERA_VENCIDA]'#13#10'WHERE '#13#10'    RIGHT(RTRIM(CarVe_NumTitulo),' +
         ' 2) = '#39'PR'#39#13#10'    AND'#13#10'('#13#10#9'CarVe_Estado in ('#39'E'#39', '#39'N'#39')'#13#10'    OR  '#13#10' ' +
         '   (CarVe_FechaRecaudacion > :FECHA_HASTA AND CarVe_Estado IN ('#39 +
-        'B'#39', '#39'J'#39'))'#13#10')'#13#10
+        'B'#39', '#39'J'#39'))'#13#10')'#13#10'order by YEAR(CarVe_FechaEmision), CarVe_NumTitulo'
     end
     item
       Alias = 'CABECERA'

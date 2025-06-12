@@ -25,7 +25,7 @@ object TRpReport
         'mTitulo), 2) = '#39'PU'#39#13#10'  AND REBAJA_VALOR.Reb_Codigo = :CODIGO'#13#10'  ' +
         'AND REBAJA_VALOR.RebVal_Fecha BETWEEN :FECHA_DESDE AND :FECHA_HA' +
         'STA'#13#10'ORDER BY '#13#10'  periodo,'#13#10'  TITULOS_PREDIO.Pre_CodigoCatastral' +
-        ';'#13#10
+        ','#13#10'TitPr_NumTitulo'#13#10
     end
     item
       Alias = 'CABECERA'

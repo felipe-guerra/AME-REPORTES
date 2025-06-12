@@ -108,159 +108,162 @@ object TRpReport
         'o IN ('#39'E'#39', '#39'B'#39', '#39'C'#39', '#39'N'#39', '#39'J'#39', '#39'Q'#39')'#13#10'      AND YEAR(CarVe_FechaE' +
         'mision) IN ('#13#10'          SELECT YEAR(CarVe_FechaEmision)'#13#10'       ' +
         '   FROM CARTERA_VENCIDA'#13#10'          WHERE CarVe_FechaRecaudacion ' +
-        'BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'          GROUP BY CarVe_' +
-        'FechaEmision'#13#10'      )'#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') ' +
-        'a'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13#10'    -- Ingreso del d'#237'a'#13#10'    SELECT'#13#10'   ' +
-        '     YEAR(CarVe_FechaEmision) AS periodo,'#13#10'        SUM(COALESCE(' +
-        'CarVe_IPU, 0)) AS IPU,'#13#10'        SUM(COALESCE(CarVe_TasaAdministr' +
-        'ativa, 0)) AS TasaAdministrativa,'#13#10'        SUM(COALESCE(CarVe_Ma' +
-        'gisterio, 0)) AS Magisterio,'#13#10'        SUM(COALESCE(CarVe_Educaci' +
-        'onElemental, 0)) AS EducacionElemental,'#13#10'        SUM(COALESCE(Ca' +
-        'rVe_MedicinaRural, 0)) AS MedicinaRural,'#13#10'        SUM(COALESCE(C' +
-        'arVe_OtrosAdicionales, 0)) AS OtrosAdicionales,'#13#10'        SUM(COA' +
-        'LESCE(CarVe_RecoleccionBasura, 0)) AS RecoleccionBasura,'#13#10'      ' +
-        '  SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'        SUM(COALESC' +
-        'E(CarVe_Valor2, 0)) AS Valor2,'#13#10'        SUM(COALESCE(CarVe_IPU, ' +
-        '0) + COALESCE(CarVe_TasaAdministrativa, 0) + COALESCE(CarVe_Magi' +
-        'sterio, 0) +'#13#10'            COALESCE(CarVe_EducacionElemental, 0) ' +
-        '+ COALESCE(CarVe_MedicinaRural, 0) + COALESCE(CarVe_OtrosAdicion' +
-        'ales, 0) +'#13#10'            COALESCE(CarVe_RecoleccionBasura, 0) + C' +
-        'OALESCE(CarVe_Valor1, 0) + COALESCE(CarVe_Valor2, 0)) AS EMITIDO' +
-        '_FOND_PROPIOS,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomb' +
-        'eros,'#13#10'        SUM(COALESCE(CarVe_ViviendaRural, 0)) AS Vivienda' +
-        'Rural,'#13#10'        SUM(COALESCE(CarVe_EstablecEducativos, 0)) AS Es' +
-        'tablecEducativos,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0) + COA' +
-        'LESCE(CarVe_ViviendaRural, 0) + COALESCE(CarVe_EstablecEducativo' +
-        's, 0)) AS EMITIDO_FOND_AJENOS,'#13#10'        SUM(COALESCE(CarVe_Inter' +
-        'es, 0)) AS Interes,'#13#10'        SUM(COALESCE(CarVe_IPU, 0) + COALES' +
-        'CE(CarVe_TasaAdministrativa, 0) + COALESCE(CarVe_Magisterio, 0) ' +
-        '+'#13#10'            COALESCE(CarVe_EducacionElemental, 0) + COALESCE(' +
-        'CarVe_MedicinaRural, 0) + COALESCE(CarVe_OtrosAdicionales, 0) +'#13 +
-        #10'            COALESCE(CarVe_RecoleccionBasura, 0) + COALESCE(Car' +
-        'Ve_Valor1, 0) + COALESCE(CarVe_Valor2, 0) +'#13#10'            COALESC' +
-        'E(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaRural, 0) + COALES' +
-        'CE(CarVe_EstablecEducativos, 0) +'#13#10'            COALESCE(CarVe_In' +
-        'teres, 0)) AS TOTAL'#13#10'    FROM CARTERA_VENCIDA'#13#10'    WHERE RIGHT(R' +
-        'TRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'      AND CarVe_Estado IN ('#39'C'#39 +
-        ', '#39'Q'#39')'#13#10'      AND CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE AN' +
-        'D :FECHA_HASTA'#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') b'#13#10'ON a' +
-        '.periodo = b.periodo'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13#10'    -- Recaudado has' +
-        'ta fecha anterior'#13#10'    SELECT'#13#10'        YEAR(CarVe_FechaEmision) ' +
-        'AS periodo,'#13#10'        SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'      ' +
-        '  SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdministrati' +
-        'va,'#13#10'        SUM(COALESCE(CarVe_Magisterio, 0)) AS Magisterio,'#13#10 +
-        '        SUM(COALESCE(CarVe_EducacionElemental, 0)) AS EducacionE' +
-        'lemental,'#13#10'        SUM(COALESCE(CarVe_MedicinaRural, 0)) AS Medi' +
-        'cinaRural,'#13#10'        SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS ' +
-        'OtrosAdicionales,'#13#10'        SUM(COALESCE(CarVe_RecoleccionBasura,' +
-        ' 0)) AS RecoleccionBasura,'#13#10'        SUM(COALESCE(CarVe_Valor1, 0' +
-        ')) AS Valor1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,' +
-        #13#10'        SUM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdmini' +
-        'strativa, 0) + COALESCE(CarVe_Magisterio, 0) +'#13#10'            COAL' +
-        'ESCE(CarVe_EducacionElemental, 0) + COALESCE(CarVe_MedicinaRural' +
-        ', 0) + COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'            COALES' +
-        'CE(CarVe_RecoleccionBasura, 0) + COALESCE(CarVe_Valor1, 0) + COA' +
-        'LESCE(CarVe_Valor2, 0)) AS EMITIDO_FOND_PROPIOS,'#13#10'        SUM(CO' +
-        'ALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10'        SUM(COALESCE(Ca' +
-        'rVe_ViviendaRural, 0)) AS ViviendaRural,'#13#10'        SUM(COALESCE(C' +
-        'arVe_EstablecEducativos, 0)) AS EstablecEducativos,'#13#10'        SUM' +
-        '(COALESCE(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaRural, 0) ' +
-        '+ COALESCE(CarVe_EstablecEducativos, 0)) AS EMITIDO_FOND_AJENOS,' +
-        #13#10'        SUM(COALESCE(CarVe_Interes, 0)) AS Interes,'#13#10'        S' +
-        'UM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdministrativa, 0' +
-        ') + COALESCE(CarVe_Magisterio, 0) +'#13#10'            COALESCE(CarVe_' +
-        'EducacionElemental, 0) + COALESCE(CarVe_MedicinaRural, 0) + COAL' +
-        'ESCE(CarVe_OtrosAdicionales, 0) +'#13#10'            COALESCE(CarVe_Re' +
-        'coleccionBasura, 0) + COALESCE(CarVe_Valor1, 0) + COALESCE(CarVe' +
-        '_Valor2, 0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) + COALESC' +
-        'E(CarVe_ViviendaRural, 0) + COALESCE(CarVe_EstablecEducativos, 0' +
-        ') +'#13#10'            COALESCE(CarVe_Interes, 0)) AS TOTAL'#13#10'    FROM ' +
-        'CARTERA_VENCIDA'#13#10'    WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'P' +
-        'R'#39#13#10'      AND CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'      AND CarVe_FechaR' +
-        'ecaudacion < :FECHA_DESDE'#13#10#13#10'      AND YEAR(CarVe_FechaEmision) ' +
-        'IN ('#13#10'          SELECT YEAR(CarVe_FechaEmision)'#13#10'          FROM ' +
-        'CARTERA_VENCIDA'#13#10'          WHERE CarVe_FechaRecaudacion BETWEEN ' +
-        ':FECHA_DESDE AND :FECHA_HASTA'#13#10'          GROUP BY CarVe_FechaEmi' +
-        'sion'#13#10'      )'#13#10#13#10#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') c'#13#10'O' +
-        'N COALESCE(a.periodo, b.periodo) = c.periodo'#13#10#13#10#13#10'FULL OUTER JOI' +
-        'N'#13#10'('#13#10'    -- Bajas del d'#237'a'#13#10'    SELECT'#13#10'        YEAR(CarVe_Fecha' +
-        'Emision) AS periodo,'#13#10'        SUM(COALESCE(CarVe_IPU, 0)) AS IPU' +
-        ','#13#10'        SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdm' +
-        'inistrativa,'#13#10'        SUM(COALESCE(CarVe_Magisterio, 0)) AS Magi' +
-        'sterio,'#13#10'        SUM(COALESCE(CarVe_EducacionElemental, 0)) AS E' +
-        'ducacionElemental,'#13#10'        SUM(COALESCE(CarVe_MedicinaRural, 0)' +
-        ') AS MedicinaRural,'#13#10'        SUM(COALESCE(CarVe_OtrosAdicionales' +
-        ', 0)) AS OtrosAdicionales,'#13#10'        SUM(COALESCE(CarVe_Recolecci' +
-        'onBasura, 0)) AS RecoleccionBasura,'#13#10'        SUM(COALESCE(CarVe_' +
-        'Valor1, 0)) AS Valor1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) A' +
-        'S Valor2,'#13#10'        SUM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_T' +
-        'asaAdministrativa, 0) + COALESCE(CarVe_Magisterio, 0) +'#13#10'       ' +
-        '     COALESCE(CarVe_EducacionElemental, 0) + COALESCE(CarVe_Medi' +
-        'cinaRural, 0) + COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'         ' +
-        '   COALESCE(CarVe_RecoleccionBasura, 0) + COALESCE(CarVe_Valor1,' +
-        ' 0) + COALESCE(CarVe_Valor2, 0)) AS EMITIDO_FOND_PROPIOS,'#13#10'     ' +
-        '   SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10'        SUM(CO' +
-        'ALESCE(CarVe_ViviendaRural, 0)) AS ViviendaRural,'#13#10'        SUM(C' +
-        'OALESCE(CarVe_EstablecEducativos, 0)) AS EstablecEducativos,'#13#10'  ' +
-        '      SUM(COALESCE(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaR' +
-        'ural, 0) + COALESCE(CarVe_EstablecEducativos, 0)) AS EMITIDO_FON' +
-        'D_AJENOS,'#13#10'        SUM(COALESCE(CarVe_Interes, 0)) AS Interes,'#13#10 +
-        '        SUM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdminist' +
-        'rativa, 0) + COALESCE(CarVe_Magisterio, 0) +'#13#10'            COALES' +
-        'CE(CarVe_EducacionElemental, 0) + COALESCE(CarVe_MedicinaRural, ' +
-        '0) + COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'            COALESCE' +
-        '(CarVe_RecoleccionBasura, 0) + COALESCE(CarVe_Valor1, 0) + COALE' +
-        'SCE(CarVe_Valor2, 0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) ' +
-        '+ COALESCE(CarVe_ViviendaRural, 0) + COALESCE(CarVe_EstablecEduc' +
-        'ativos, 0) +'#13#10'            COALESCE(CarVe_Interes, 0)) AS TOTAL'#13#10 +
-        '    FROM CARTERA_VENCIDA'#13#10'    WHERE RIGHT(RTRIM(CarVe_NumTitulo)' +
-        ', 2) = '#39'PR'#39#13#10'      AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'      AND Car' +
-        'Ve_FechaRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'    G' +
-        'ROUP BY YEAR(CarVe_FechaEmision)'#13#10') d'#13#10'ON COALESCE(COALESCE(a.pe' +
-        'riodo, b.periodo), c.periodo) = d.periodo'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13 +
-        #10'    -- Bajas Acumuladas'#13#10'SELECT'#13#10'    YEAR(CarVe_FechaEmision) A' +
-        'S periodo,'#13#10#13#10'    -- Fondos Propios (componentes)'#13#10'    SUM(COALE' +
-        'SCE(CarVe_IPU, 0)) AS IPU,'#13#10'    SUM(COALESCE(CarVe_TasaAdministr' +
-        'ativa, 0)) AS TasaAdministrativa,'#13#10'    SUM(COALESCE(CarVe_Magist' +
-        'erio, 0)) AS Magisterio,'#13#10'    SUM(COALESCE(CarVe_EducacionElemen' +
-        'tal, 0)) AS EducacionElemental,'#13#10'    SUM(COALESCE(CarVe_Medicina' +
-        'Rural, 0)) AS MedicinaRural,'#13#10'    SUM(COALESCE(CarVe_OtrosAdicio' +
-        'nales, 0)) AS OtrosAdicionales,'#13#10'    SUM(COALESCE(CarVe_Recolecc' +
-        'ionBasura, 0)) AS RecoleccionBasura,'#13#10'    SUM(COALESCE(CarVe_Val' +
-        'or1, 0)) AS Valor1,'#13#10'    SUM(COALESCE(CarVe_Valor2, 0)) AS Valor' +
-        '2,'#13#10#13#10'    -- FONDOS_PROPIOS'#13#10'    SUM('#13#10'        COALESCE(CarVe_IP' +
-        'U, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'      ' +
-        '  COALESCE(CarVe_Magisterio, 0) +'#13#10'        COALESCE(CarVe_Educac' +
-        'ionElemental, 0) +'#13#10'        COALESCE(CarVe_MedicinaRural, 0) +'#13#10 +
-        '        COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'        COALESCE(' +
-        'CarVe_RecoleccionBasura, 0) +'#13#10'        COALESCE(CarVe_Valor1, 0)' +
-        ' +'#13#10'        COALESCE(CarVe_Valor2, 0)'#13#10'    ) AS EMITIDO_FOND_PRO' +
-        'PIOS,'#13#10#13#10'    -- Fondos Ajenos (componentes)'#13#10'    SUM(COALESCE(Ca' +
-        'rVe_Bomberos, 0)) AS Bomberos,'#13#10'    SUM(COALESCE(CarVe_ViviendaR' +
-        'ural, 0)) AS ViviendaRural,'#13#10'    SUM(COALESCE(CarVe_EstablecEduc' +
-        'ativos, 0)) AS EstablecEducativos,'#13#10#13#10'    -- FONDOS_AJENOS'#13#10'    ' +
-        'SUM('#13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(Ca' +
-        'rVe_ViviendaRural, 0) +'#13#10'        COALESCE(CarVe_EstablecEducativ' +
-        'os, 0)'#13#10'    ) AS EMITIDO_FOND_AJENOS,'#13#10#13#10'    -- Inter'#233's'#13#10'    SUM' +
-        '(COALESCE(CarVe_Interes, 0)) AS Interes,'#13#10#13#10'    -- TOTAL (sin re' +
-        'cargo)'#13#10'    SUM('#13#10'        COALESCE(CarVe_IPU, 0) +'#13#10'        COAL' +
-        'ESCE(CarVe_TasaAdministrativa, 0) +'#13#10'        COALESCE(CarVe_Magi' +
-        'sterio, 0) +'#13#10'        COALESCE(CarVe_EducacionElemental, 0) +'#13#10' ' +
-        '       COALESCE(CarVe_MedicinaRural, 0) +'#13#10'        COALESCE(CarV' +
-        'e_OtrosAdicionales, 0) +'#13#10'        COALESCE(CarVe_RecoleccionBasu' +
-        'ra, 0) +'#13#10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(' +
-        'CarVe_Valor2, 0) +'#13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'     ' +
-        '   COALESCE(CarVe_ViviendaRural, 0) +'#13#10'        COALESCE(CarVe_Es' +
-        'tablecEducativos, 0) +'#13#10'        COALESCE(CarVe_Interes, 0)'#13#10'    ' +
-        ') AS TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumT' +
-        'itulo), 2) = '#39'PR'#39#13#10'  AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe' +
-        '_FechaRecaudacion < :FECHA_DESDE'#13#10#13#10#13#10'      AND YEAR(CarVe_Fecha' +
-        'Emision) IN ('#13#10'          SELECT YEAR(CarVe_FechaEmision)'#13#10'      ' +
-        '    FROM CARTERA_VENCIDA'#13#10'          WHERE CarVe_FechaRecaudacion' +
-        ' BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'          GROUP BY CarVe' +
-        '_FechaEmision'#13#10'      )'#13#10#13#10#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10#13 +
-        #10') e'#13#10'ON COALESCE(a.periodo, b.periodo, c.periodo, d.periodo) = ' +
-        'e.periodo'#13#10#13#10'ORDER BY periodo DESC;'
+        'BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'          AND RIGHT(RTRIM' +
+        '(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'          GROUP BY CarVe_FechaEmis' +
+        'ion'#13#10'      )'#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') a'#13#10#13#10'FULL' +
+        ' OUTER JOIN'#13#10'('#13#10'    -- Ingreso del d'#237'a'#13#10'    SELECT'#13#10'        YEAR' +
+        '(CarVe_FechaEmision) AS periodo,'#13#10'        SUM(COALESCE(CarVe_IPU' +
+        ', 0)) AS IPU,'#13#10'        SUM(COALESCE(CarVe_TasaAdministrativa, 0)' +
+        ') AS TasaAdministrativa,'#13#10'        SUM(COALESCE(CarVe_Magisterio,' +
+        ' 0)) AS Magisterio,'#13#10'        SUM(COALESCE(CarVe_EducacionElement' +
+        'al, 0)) AS EducacionElemental,'#13#10'        SUM(COALESCE(CarVe_Medic' +
+        'inaRural, 0)) AS MedicinaRural,'#13#10'        SUM(COALESCE(CarVe_Otro' +
+        'sAdicionales, 0)) AS OtrosAdicionales,'#13#10'        SUM(COALESCE(Car' +
+        'Ve_RecoleccionBasura, 0)) AS RecoleccionBasura,'#13#10'        SUM(COA' +
+        'LESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'        SUM(COALESCE(CarVe_V' +
+        'alor2, 0)) AS Valor2,'#13#10'        SUM(COALESCE(CarVe_IPU, 0) + COAL' +
+        'ESCE(CarVe_TasaAdministrativa, 0) + COALESCE(CarVe_Magisterio, 0' +
+        ') +'#13#10'            COALESCE(CarVe_EducacionElemental, 0) + COALESC' +
+        'E(CarVe_MedicinaRural, 0) + COALESCE(CarVe_OtrosAdicionales, 0) ' +
+        '+'#13#10'            COALESCE(CarVe_RecoleccionBasura, 0) + COALESCE(C' +
+        'arVe_Valor1, 0) + COALESCE(CarVe_Valor2, 0)) AS EMITIDO_FOND_PRO' +
+        'PIOS,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10'  ' +
+        '      SUM(COALESCE(CarVe_ViviendaRural, 0)) AS ViviendaRural,'#13#10' ' +
+        '       SUM(COALESCE(CarVe_EstablecEducativos, 0)) AS EstablecEdu' +
+        'cativos,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0) + COALESCE(Car' +
+        'Ve_ViviendaRural, 0) + COALESCE(CarVe_EstablecEducativos, 0)) AS' +
+        ' EMITIDO_FOND_AJENOS,'#13#10'        SUM(COALESCE(CarVe_Interes, 0)) A' +
+        'S Interes,'#13#10'        SUM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_' +
+        'TasaAdministrativa, 0) + COALESCE(CarVe_Magisterio, 0) +'#13#10'      ' +
+        '      COALESCE(CarVe_EducacionElemental, 0) + COALESCE(CarVe_Med' +
+        'icinaRural, 0) + COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'        ' +
+        '    COALESCE(CarVe_RecoleccionBasura, 0) + COALESCE(CarVe_Valor1' +
+        ', 0) + COALESCE(CarVe_Valor2, 0) +'#13#10'            COALESCE(CarVe_B' +
+        'omberos, 0) + COALESCE(CarVe_ViviendaRural, 0) + COALESCE(CarVe_' +
+        'EstablecEducativos, 0) +'#13#10'            COALESCE(CarVe_Interes, 0)' +
+        ') AS TOTAL'#13#10'    FROM CARTERA_VENCIDA'#13#10'    WHERE RIGHT(RTRIM(CarV' +
+        'e_NumTitulo), 2) = '#39'PR'#39#13#10'      AND CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10' ' +
+        '     AND CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_' +
+        'HASTA'#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') b'#13#10'ON a.periodo ' +
+        '= b.periodo'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13#10'    -- Recaudado hasta fecha ' +
+        'anterior'#13#10'    SELECT'#13#10'        YEAR(CarVe_FechaEmision) AS period' +
+        'o,'#13#10'        SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'        SUM(COA' +
+        'LESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdministrativa,'#13#10'    ' +
+        '    SUM(COALESCE(CarVe_Magisterio, 0)) AS Magisterio,'#13#10'        S' +
+        'UM(COALESCE(CarVe_EducacionElemental, 0)) AS EducacionElemental,' +
+        #13#10'        SUM(COALESCE(CarVe_MedicinaRural, 0)) AS MedicinaRural' +
+        ','#13#10'        SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS OtrosAdic' +
+        'ionales,'#13#10'        SUM(COALESCE(CarVe_RecoleccionBasura, 0)) AS R' +
+        'ecoleccionBasura,'#13#10'        SUM(COALESCE(CarVe_Valor1, 0)) AS Val' +
+        'or1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10'       ' +
+        ' SUM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdministrativa,' +
+        ' 0) + COALESCE(CarVe_Magisterio, 0) +'#13#10'            COALESCE(CarV' +
+        'e_EducacionElemental, 0) + COALESCE(CarVe_MedicinaRural, 0) + CO' +
+        'ALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'            COALESCE(CarVe_' +
+        'RecoleccionBasura, 0) + COALESCE(CarVe_Valor1, 0) + COALESCE(Car' +
+        'Ve_Valor2, 0)) AS EMITIDO_FOND_PROPIOS,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_Bomberos, 0)) AS Bomberos,'#13#10'        SUM(COALESCE(CarVe_Vivie' +
+        'ndaRural, 0)) AS ViviendaRural,'#13#10'        SUM(COALESCE(CarVe_Esta' +
+        'blecEducativos, 0)) AS EstablecEducativos,'#13#10'        SUM(COALESCE' +
+        '(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaRural, 0) + COALESC' +
+        'E(CarVe_EstablecEducativos, 0)) AS EMITIDO_FOND_AJENOS,'#13#10'       ' +
+        ' SUM(COALESCE(CarVe_Interes, 0)) AS Interes,'#13#10'        SUM(COALES' +
+        'CE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdministrativa, 0) + COALE' +
+        'SCE(CarVe_Magisterio, 0) +'#13#10'            COALESCE(CarVe_Educacion' +
+        'Elemental, 0) + COALESCE(CarVe_MedicinaRural, 0) + COALESCE(CarV' +
+        'e_OtrosAdicionales, 0) +'#13#10'            COALESCE(CarVe_Recoleccion' +
+        'Basura, 0) + COALESCE(CarVe_Valor1, 0) + COALESCE(CarVe_Valor2, ' +
+        '0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) + COALESCE(CarVe_V' +
+        'iviendaRural, 0) + COALESCE(CarVe_EstablecEducativos, 0) +'#13#10'    ' +
+        '        COALESCE(CarVe_Interes, 0)) AS TOTAL'#13#10'    FROM CARTERA_V' +
+        'ENCIDA'#13#10'    WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'     ' +
+        ' AND CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'      AND CarVe_FechaRecaudacio' +
+        'n < :FECHA_DESDE'#13#10#13#10'      AND YEAR(CarVe_FechaEmision) IN ('#13#10'   ' +
+        '       SELECT YEAR(CarVe_FechaEmision)'#13#10'          FROM CARTERA_V' +
+        'ENCIDA'#13#10'          WHERE CarVe_FechaRecaudacion BETWEEN :FECHA_DE' +
+        'SDE AND :FECHA_HASTA'#13#10'          AND RIGHT(RTRIM(CarVe_NumTitulo)' +
+        ', 2) = '#39'PR'#39#13#10'          GROUP BY CarVe_FechaEmision'#13#10'      )'#13#10#13#10#13 +
+        #10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') c'#13#10'ON COALESCE(a.perio' +
+        'do, b.periodo) = c.periodo'#13#10#13#10#13#10'FULL OUTER JOIN'#13#10'('#13#10'    -- Bajas' +
+        ' del d'#237'a'#13#10'    SELECT'#13#10'        YEAR(CarVe_FechaEmision) AS period' +
+        'o,'#13#10'        SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'        SUM(COA' +
+        'LESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdministrativa,'#13#10'    ' +
+        '    SUM(COALESCE(CarVe_Magisterio, 0)) AS Magisterio,'#13#10'        S' +
+        'UM(COALESCE(CarVe_EducacionElemental, 0)) AS EducacionElemental,' +
+        #13#10'        SUM(COALESCE(CarVe_MedicinaRural, 0)) AS MedicinaRural' +
+        ','#13#10'        SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS OtrosAdic' +
+        'ionales,'#13#10'        SUM(COALESCE(CarVe_RecoleccionBasura, 0)) AS R' +
+        'ecoleccionBasura,'#13#10'        SUM(COALESCE(CarVe_Valor1, 0)) AS Val' +
+        'or1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10'       ' +
+        ' SUM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdministrativa,' +
+        ' 0) + COALESCE(CarVe_Magisterio, 0) +'#13#10'            COALESCE(CarV' +
+        'e_EducacionElemental, 0) + COALESCE(CarVe_MedicinaRural, 0) + CO' +
+        'ALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'            COALESCE(CarVe_' +
+        'RecoleccionBasura, 0) + COALESCE(CarVe_Valor1, 0) + COALESCE(Car' +
+        'Ve_Valor2, 0)) AS EMITIDO_FOND_PROPIOS,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_Bomberos, 0)) AS Bomberos,'#13#10'        SUM(COALESCE(CarVe_Vivie' +
+        'ndaRural, 0)) AS ViviendaRural,'#13#10'        SUM(COALESCE(CarVe_Esta' +
+        'blecEducativos, 0)) AS EstablecEducativos,'#13#10'        SUM(COALESCE' +
+        '(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaRural, 0) + COALESC' +
+        'E(CarVe_EstablecEducativos, 0)) AS EMITIDO_FOND_AJENOS,'#13#10'       ' +
+        ' SUM(COALESCE(CarVe_Interes, 0)) AS Interes,'#13#10'        SUM(COALES' +
+        'CE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdministrativa, 0) + COALE' +
+        'SCE(CarVe_Magisterio, 0) +'#13#10'            COALESCE(CarVe_Educacion' +
+        'Elemental, 0) + COALESCE(CarVe_MedicinaRural, 0) + COALESCE(CarV' +
+        'e_OtrosAdicionales, 0) +'#13#10'            COALESCE(CarVe_Recoleccion' +
+        'Basura, 0) + COALESCE(CarVe_Valor1, 0) + COALESCE(CarVe_Valor2, ' +
+        '0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) + COALESCE(CarVe_V' +
+        'iviendaRural, 0) + COALESCE(CarVe_EstablecEducativos, 0) +'#13#10'    ' +
+        '        COALESCE(CarVe_Interes, 0)) AS TOTAL'#13#10'    FROM CARTERA_V' +
+        'ENCIDA'#13#10'    WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'     ' +
+        ' AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'      AND CarVe_FechaRecaudacio' +
+        'n BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'    GROUP BY YEAR(CarVe' +
+        '_FechaEmision)'#13#10') d'#13#10'ON COALESCE(COALESCE(a.periodo, b.periodo),' +
+        ' c.periodo) = d.periodo'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13#10'    -- Bajas Acum' +
+        'uladas'#13#10'SELECT'#13#10'    YEAR(CarVe_FechaEmision) AS periodo,'#13#10#13#10'    ' +
+        '-- Fondos Propios (componentes)'#13#10'    SUM(COALESCE(CarVe_IPU, 0))' +
+        ' AS IPU,'#13#10'    SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS Tasa' +
+        'Administrativa,'#13#10'    SUM(COALESCE(CarVe_Magisterio, 0)) AS Magis' +
+        'terio,'#13#10'    SUM(COALESCE(CarVe_EducacionElemental, 0)) AS Educac' +
+        'ionElemental,'#13#10'    SUM(COALESCE(CarVe_MedicinaRural, 0)) AS Medi' +
+        'cinaRural,'#13#10'    SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS Otro' +
+        'sAdicionales,'#13#10'    SUM(COALESCE(CarVe_RecoleccionBasura, 0)) AS ' +
+        'RecoleccionBasura,'#13#10'    SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1' +
+        ','#13#10'    SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10#13#10'    -- FONDO' +
+        'S_PROPIOS'#13#10'    SUM('#13#10'        COALESCE(CarVe_IPU, 0) +'#13#10'        C' +
+        'OALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'        COALESCE(CarVe_M' +
+        'agisterio, 0) +'#13#10'        COALESCE(CarVe_EducacionElemental, 0) +' +
+        #13#10'        COALESCE(CarVe_MedicinaRural, 0) +'#13#10'        COALESCE(C' +
+        'arVe_OtrosAdicionales, 0) +'#13#10'        COALESCE(CarVe_RecoleccionB' +
+        'asura, 0) +'#13#10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALES' +
+        'CE(CarVe_Valor2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- Fo' +
+        'ndos Ajenos (componentes)'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) ' +
+        'AS Bomberos,'#13#10'    SUM(COALESCE(CarVe_ViviendaRural, 0)) AS Vivie' +
+        'ndaRural,'#13#10'    SUM(COALESCE(CarVe_EstablecEducativos, 0)) AS Est' +
+        'ablecEducativos,'#13#10#13#10'    -- FONDOS_AJENOS'#13#10'    SUM('#13#10'        COAL' +
+        'ESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(CarVe_ViviendaRural,' +
+        ' 0) +'#13#10'        COALESCE(CarVe_EstablecEducativos, 0)'#13#10'    ) AS E' +
+        'MITIDO_FOND_AJENOS,'#13#10#13#10'    -- Inter'#233's'#13#10'    SUM(COALESCE(CarVe_In' +
+        'teres, 0)) AS Interes,'#13#10#13#10'    -- TOTAL (sin recargo)'#13#10'    SUM('#13#10 +
+        '        COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdm' +
+        'inistrativa, 0) +'#13#10'        COALESCE(CarVe_Magisterio, 0) +'#13#10'    ' +
+        '    COALESCE(CarVe_EducacionElemental, 0) +'#13#10'        COALESCE(Ca' +
+        'rVe_MedicinaRural, 0) +'#13#10'        COALESCE(CarVe_OtrosAdicionales' +
+        ', 0) +'#13#10'        COALESCE(CarVe_RecoleccionBasura, 0) +'#13#10'        ' +
+        'COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, 0) +' +
+        #13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(CarVe_' +
+        'ViviendaRural, 0) +'#13#10'        COALESCE(CarVe_EstablecEducativos, ' +
+        '0) +'#13#10'        COALESCE(CarVe_Interes, 0)'#13#10'    ) AS TOTAL'#13#10#13#10'FROM' +
+        ' CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13 +
+        #10'  AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe_FechaRecaudacion ' +
+        '< :FECHA_DESDE'#13#10#13#10#13#10'      AND YEAR(CarVe_FechaEmision) IN ('#13#10'   ' +
+        '       SELECT YEAR(CarVe_FechaEmision)'#13#10'          FROM CARTERA_V' +
+        'ENCIDA'#13#10'          WHERE CarVe_FechaRecaudacion BETWEEN :FECHA_DE' +
+        'SDE AND :FECHA_HASTA'#13#10'          AND RIGHT(RTRIM(CarVe_NumTitulo)' +
+        ', 2) = '#39'PR'#39#13#10'          GROUP BY CarVe_FechaEmision'#13#10'      )'#13#10#13#10#13 +
+        #10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10#13#10') e'#13#10'ON COALESCE(a.periodo' +
+        ', b.periodo, c.periodo, d.periodo) = e.periodo'#13#10#13#10'ORDER BY perio' +
+        'do DESC;'
     end
     item
       Alias = 'CABECERA'
@@ -479,7 +482,7 @@ object TRpReport
     item
       Name = 'FECHA_DESDE'
       AllowNulls = False
-      Value = 45806d
+      Value = 45805d
       ParamType = rpParamDateTime
       Datasets.Strings = (
         'DATOS'
@@ -497,7 +500,7 @@ object TRpReport
     item
       Name = 'FECHA_HASTA'
       AllowNulls = False
-      Value = 45806.8465740741d
+      Value = 45805.8465740741d
       ParamType = rpParamDateTime
       Datasets.Strings = (
         'DATOS'

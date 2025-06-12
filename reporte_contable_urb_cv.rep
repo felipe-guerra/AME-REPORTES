@@ -13,35 +13,209 @@ object TRpReport
       Alias = 'DATOS'
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
-        'SELECT'#13#10'    YEAR(CarVe_FechaEmision) AS periodo,'#13#10#13#10'    -- Fondo' +
-        's Propios'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'    SUM(COAL' +
-        'ESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdministrativa,'#13#10'    S' +
-        'UM(COALESCE(CarVe_SolNoEdif, 0)) AS SolNoEdif,'#13#10'    SUM(COALESCE' +
-        '(CarVe_ConstObsoleta, 0)) AS ConstObsoleta,'#13#10'    SUM(COALESCE(Ca' +
-        'rVe_SNERecargo, 0)) AS SNERecargo,'#13#10'    SUM(COALESCE(CarVe_Valor' +
-        '1, 0)) AS Valor1,'#13#10'    SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,' +
-        #13#10#13#10'    -- FONDOS_PROPIOS seg'#250'n regla'#13#10'    SUM('#13#10'        COALESC' +
-        'E(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0)' +
-        ' +'#13#10'        COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(Car' +
-        'Ve_ConstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13 +
-        #10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Val' +
-        'or2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- FONDOS_AJENOS ' +
-        'seg'#250'n regla'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10 +
-        '    SUM(COALESCE(CarVe_Bomberos, 0)) AS EMITIDO_FOND_AJENOS,'#13#10#13#10 +
-        '    -- Inter'#233's y Recargo'#13#10'    SUM(COALESCE(CarVe_Interes, 0)) AS' +
-        ' Interes,'#13#10'    SUM(COALESCE(CarVe_Recargo, 0)) AS Recargo,'#13#10#13#10'  ' +
-        '  -- Total con inter'#233's y recargo'#13#10'    SUM('#13#10'        COALESCE(Car' +
-        'Ve_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10' ' +
-        '       COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(CarVe_Co' +
-        'nstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13#10'    ' +
-        '    COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, ' +
-        '0) +'#13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(Ca' +
-        'rVe_Interes, 0) +'#13#10'        COALESCE(CarVe_Recargo, 0)'#13#10'    ) AS ' +
-        'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
-        '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'E'#39', '#39'B'#39', '#39'C'#39', '#39'N'#39', '#39'J'#39', '#39'Q' +
-        #39')'#13#10'  AND CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE AND :FECHA' +
-        '_HASTA'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_F' +
-        'echaEmision) DESC;'#13#10
+        'SELECT'#13#10'   COALESCE(COALESCE(a.periodo, b.periodo), c.periodo, d' +
+        '.periodo, e.periodo) AS periodo,'#13#10#13#10'    -- Valores Emitidos'#13#10'   ' +
+        ' a.IPU AS Emitido_IPU,'#13#10'    a.TasaAdministrativa AS Emitido_Tasa' +
+        'Administrativa,'#13#10'    a.SolNoEdif AS Emitido_SolNoEdif,'#13#10'    a.Co' +
+        'nstObsoleta AS Emitido_ConstObsoleta,'#13#10'    a.SNERecargo AS Emiti' +
+        'do_SNERecargo,'#13#10'    a.Valor1 AS Emitido_Valor1,'#13#10'    a.Valor2 AS' +
+        ' Emitido_Valor2,'#13#10'    a.EMITIDO_FOND_PROPIOS AS EMITIDO_FOND_PRO' +
+        'PIOS,'#13#10'    a.Bomberos AS Emitido_Bomberos,'#13#10'    a.EMITIDO_FOND_A' +
+        'JENOS AS EMITIDO_FOND_AJENOS,'#13#10'    a.Interes AS Emitido_Interes,' +
+        #13#10'    a.Recargo AS Emitido_Recargo,'#13#10'    a.TOTAL AS TOTAL_EMITID' +
+        'O,'#13#10#13#10'    -- Valores Recaudado en el D'#237'a'#13#10'    b.IPU AS IngresoDi' +
+        'a_IPU,'#13#10'    b.TasaAdministrativa AS IngresoDia_TasaAdministrativ' +
+        'a,'#13#10'    b.SolNoEdif AS IngresoDia_SolNoEdif,'#13#10'    b.ConstObsolet' +
+        'a AS IngresoDia_ConstObsoleta,'#13#10'    b.SNERecargo AS IngresoDia_S' +
+        'NERecargo,'#13#10'    b.Valor1 AS IngresoDia_Valor1,'#13#10'    b.Valor2 AS ' +
+        'IngresoDia_Valor2,'#13#10'    b.EMITIDO_FOND_PROPIOS AS INGRESODIA_FON' +
+        'D_PROPIOS,'#13#10'    b.Bomberos AS IngresoDia_Bomberos,'#13#10'    b.EMITID' +
+        'O_FOND_AJENOS AS INGRESODIA_FOND_AJENOS,'#13#10'    b.Interes AS Ingre' +
+        'soDia_Interes,'#13#10'    b.Recargo AS IngresoDia_Recargo,'#13#10'    b.TOTA' +
+        'L AS TOTAL_INGRESODIA,'#13#10#13#10'    -- Valores INGRESO ACUMULADO'#13#10'    ' +
+        'c.IPU AS IngresoAcum_IPU,'#13#10'    c.TasaAdministrativa AS IngresoAc' +
+        'um_TasaAdministrativa,'#13#10'    c.SolNoEdif AS IngresoAcum_SolNoEdif' +
+        ','#13#10'    c.ConstObsoleta AS IngresoAcum_ConstObsoleta,'#13#10'    c.SNER' +
+        'ecargo AS IngresoAcum_SNERecargo,'#13#10'    c.Valor1 AS IngresoAcum_V' +
+        'alor1,'#13#10'    c.Valor2 AS IngresoAcum_Valor2,'#13#10'    c.EMITIDO_FOND_' +
+        'PROPIOS AS IngresoAcum_FOND_PROPIOS,'#13#10'    c.Bomberos AS IngresoA' +
+        'cum_Bomberos,'#13#10'    c.EMITIDO_FOND_AJENOS AS IngresoAcum_FOND_AJE' +
+        'NOS,'#13#10'    c.Interes AS IngresoAcum_Interes,'#13#10'    c.Recargo AS In' +
+        'gresoAcum_Recargo,'#13#10'    c.TOTAL AS TOTAL_IngresoAcum,'#13#10#13#10'    -- ' +
+        'Bajas del d'#237'a'#13#10'    d.IPU AS BajaDia_IPU,'#13#10'    d.TasaAdministrati' +
+        'va AS BajaDia_TasaAdministrativa,'#13#10'    d.SolNoEdif AS BajaDia_So' +
+        'lNoEdif,'#13#10'    d.ConstObsoleta AS BajaDia_ConstObsoleta,'#13#10'    d.S' +
+        'NERecargo AS BajaDia_SNERecargo,'#13#10'    d.Valor1 AS BajaDia_Valor1' +
+        ','#13#10'    d.Valor2 AS BajaDia_Valor2,'#13#10'    d.EMITIDO_FOND_PROPIOS A' +
+        'S BajaDia_FOND_PROPIOS,'#13#10'    d.Bomberos AS BajaDia_Bomberos,'#13#10'  ' +
+        '  d.EMITIDO_FOND_AJENOS AS BajaDia_FOND_AJENOS,'#13#10'    d.Interes A' +
+        'S BajaDia_Interes,'#13#10'    d.Recargo AS BajaDia_Recargo,'#13#10'    d.TOT' +
+        'AL AS TOTAL_BajaDia,'#13#10#13#10'    -- Bajas acumuladas'#13#10'    e.IPU AS Ba' +
+        'jasAcumIPU,'#13#10'    e.TasaAdministrativa AS BajasAcumTasaAdministra' +
+        'tiva,'#13#10'    e.SolNoEdif AS BajasAcumSolNoEdif,'#13#10'    e.ConstObsole' +
+        'ta AS BajasAcumConstObsoleta,'#13#10'    e.SNERecargo AS BajasAcumSNER' +
+        'ecargo,'#13#10'    e.Valor1 AS BajasAcumValor1,'#13#10'    e.Valor2 AS Bajas' +
+        'AcumValor2,'#13#10'    e.EMITIDO_FOND_PROPIOS AS BajasAcumFOND_PROPIOS' +
+        ','#13#10'    e.Bomberos AS BajasAcumBomberos,'#13#10'    e.EMITIDO_FOND_AJEN' +
+        'OS AS BajasAcumFOND_AJENOS,'#13#10'    e.Interes AS BajasAcumInteres,'#13 +
+        #10'    e.Recargo AS BajasAcumRecargo,'#13#10'    e.TOTAL AS TOTAL_BajasA' +
+        'cum'#13#10#13#10'FROM'#13#10'('#13#10'    -- Emitidos (primer SELECT)'#13#10'    SELECT'#13#10'   ' +
+        '     YEAR(CarVe_FechaEmision) AS periodo,'#13#10'        SUM(COALESCE(' +
+        'CarVe_IPU, 0)) AS IPU,'#13#10'        SUM(COALESCE(CarVe_TasaAdministr' +
+        'ativa, 0)) AS TasaAdministrativa,'#13#10'        SUM(COALESCE(CarVe_So' +
+        'lNoEdif, 0)) AS SolNoEdif,'#13#10'        SUM(COALESCE(CarVe_ConstObso' +
+        'leta, 0)) AS ConstObsoleta,'#13#10'        SUM(COALESCE(CarVe_SNERecar' +
+        'go, 0)) AS SNERecargo,'#13#10'        SUM(COALESCE(CarVe_Valor1, 0)) A' +
+        'S Valor1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10'  ' +
+        '      SUM('#13#10'            COALESCE(CarVe_IPU, 0) +'#13#10'            CO' +
+        'ALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'            COALESCE(CarV' +
+        'e_SolNoEdif, 0) +'#13#10'            COALESCE(CarVe_ConstObsoleta, 0) ' +
+        '+'#13#10'            COALESCE(CarVe_SNERecargo, 0) +'#13#10'            COAL' +
+        'ESCE(CarVe_Valor1, 0) +'#13#10'            COALESCE(CarVe_Valor2, 0)'#13#10 +
+        '        ) AS EMITIDO_FOND_PROPIOS,'#13#10'        SUM(COALESCE(CarVe_B' +
+        'omberos, 0)) AS Bomberos,'#13#10'        SUM(COALESCE(CarVe_Bomberos, ' +
+        '0)) AS EMITIDO_FOND_AJENOS,'#13#10'        SUM(COALESCE(CarVe_Interes,' +
+        ' 0)) AS Interes,'#13#10'        SUM(COALESCE(CarVe_Recargo, 0)) AS Rec' +
+        'argo,'#13#10'        SUM('#13#10'            COALESCE(CarVe_IPU, 0) +'#13#10'     ' +
+        '       COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'            COAL' +
+        'ESCE(CarVe_SolNoEdif, 0) +'#13#10'            COALESCE(CarVe_ConstObso' +
+        'leta, 0) +'#13#10'            COALESCE(CarVe_SNERecargo, 0) +'#13#10'       ' +
+        '     COALESCE(CarVe_Valor1, 0) +'#13#10'            COALESCE(CarVe_Val' +
+        'or2, 0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) +'#13#10'          ' +
+        '  COALESCE(CarVe_Interes, 0) +'#13#10'            COALESCE(CarVe_Recar' +
+        'go, 0)'#13#10'        ) AS TOTAL'#13#10'    FROM CARTERA_VENCIDA'#13#10'    WHERE ' +
+        'RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PU'#39#13#10'      AND CarVe_Estado ' +
+        'IN ('#39'E'#39', '#39'B'#39', '#39'C'#39', '#39'N'#39', '#39'J'#39', '#39'Q'#39')'#13#10#13#10#13#10'      AND YEAR(CarVe_Fech' +
+        'aEmision) IN ('#13#10'          SELECT YEAR(CarVe_FechaEmision)'#13#10'     ' +
+        '     FROM CARTERA_VENCIDA'#13#10'          WHERE CarVe_FechaRecaudacio' +
+        'n BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'          and RIGHT(RTR' +
+        'IM(CarVe_NumTitulo), 2) = '#39'PU'#39#13#10'          GROUP BY CarVe_FechaEm' +
+        'ision'#13#10'      )'#13#10#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') a'#13#10#13#10 +
+        'FULL OUTER JOIN'#13#10'('#13#10'    -- Ingreso del d'#237'a (segundo SELECT)'#13#10'   ' +
+        ' SELECT'#13#10'        YEAR(CarVe_FechaEmision) AS periodo,'#13#10'        S' +
+        'UM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'        SUM(COALESCE(CarVe_T' +
+        'asaAdministrativa, 0)) AS TasaAdministrativa,'#13#10'        SUM(COALE' +
+        'SCE(CarVe_SolNoEdif, 0)) AS SolNoEdif,'#13#10'        SUM(COALESCE(Car' +
+        'Ve_ConstObsoleta, 0)) AS ConstObsoleta,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_SNERecargo, 0)) AS SNERecargo,'#13#10'        SUM(COALESCE(CarVe_V' +
+        'alor1, 0)) AS Valor1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) AS' +
+        ' Valor2,'#13#10'        SUM('#13#10'            COALESCE(CarVe_IPU, 0) +'#13#10'  ' +
+        '          COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'            C' +
+        'OALESCE(CarVe_SolNoEdif, 0) +'#13#10'            COALESCE(CarVe_ConstO' +
+        'bsoleta, 0) +'#13#10'            COALESCE(CarVe_SNERecargo, 0) +'#13#10'    ' +
+        '        COALESCE(CarVe_Valor1, 0) +'#13#10'            COALESCE(CarVe_' +
+        'Valor2, 0)'#13#10'        ) AS EMITIDO_FOND_PROPIOS,'#13#10'        SUM(COAL' +
+        'ESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10'        SUM(COALESCE(CarV' +
+        'e_Bomberos, 0)) AS EMITIDO_FOND_AJENOS,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_Interes, 0)) AS Interes,'#13#10'        SUM(COALESCE(CarVe_Recargo' +
+        ', 0)) AS Recargo,'#13#10'        SUM('#13#10'            COALESCE(CarVe_IPU,' +
+        ' 0) +'#13#10'            COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'    ' +
+        '        COALESCE(CarVe_SolNoEdif, 0) +'#13#10'            COALESCE(Car' +
+        'Ve_ConstObsoleta, 0) +'#13#10'            COALESCE(CarVe_SNERecargo, 0' +
+        ') +'#13#10'            COALESCE(CarVe_Valor1, 0) +'#13#10'            COALES' +
+        'CE(CarVe_Valor2, 0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) +' +
+        #13#10'            COALESCE(CarVe_Interes, 0) +'#13#10'            COALESCE' +
+        '(CarVe_Recargo, 0)'#13#10'        ) AS TOTAL'#13#10'    FROM CARTERA_VENCIDA' +
+        #13#10'    WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PU'#39#13#10'      AND C' +
+        'arVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'      AND CarVe_FechaRecaudacion BETW' +
+        'EEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'    GROUP BY YEAR(CarVe_Fecha' +
+        'Emision)'#13#10') b'#13#10'ON a.periodo = b.periodo'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13#10' ' +
+        '   -- Recaudado hasta fecha anterior (tercer SELECT)'#13#10'    SELECT' +
+        #13#10'        YEAR(CarVe_FechaEmision) AS periodo,'#13#10'        SUM(COAL' +
+        'ESCE(CarVe_IPU, 0)) AS IPU,'#13#10'        SUM(COALESCE(CarVe_TasaAdmi' +
+        'nistrativa, 0)) AS TasaAdministrativa,'#13#10'        SUM(COALESCE(Car' +
+        'Ve_SolNoEdif, 0)) AS SolNoEdif,'#13#10'        SUM(COALESCE(CarVe_Cons' +
+        'tObsoleta, 0)) AS ConstObsoleta,'#13#10'        SUM(COALESCE(CarVe_SNE' +
+        'Recargo, 0)) AS SNERecargo,'#13#10'        SUM(COALESCE(CarVe_Valor1, ' +
+        '0)) AS Valor1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2' +
+        ','#13#10'        SUM('#13#10'            COALESCE(CarVe_IPU, 0) +'#13#10'         ' +
+        '   COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'            COALESCE' +
+        '(CarVe_SolNoEdif, 0) +'#13#10'            COALESCE(CarVe_ConstObsoleta' +
+        ', 0) +'#13#10'            COALESCE(CarVe_SNERecargo, 0) +'#13#10'           ' +
+        ' COALESCE(CarVe_Valor1, 0) +'#13#10'            COALESCE(CarVe_Valor2,' +
+        ' 0)'#13#10'        ) AS EMITIDO_FOND_PROPIOS,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_Bomberos, 0)) AS Bomberos,'#13#10'        SUM(COALESCE(CarVe_Bombe' +
+        'ros, 0)) AS EMITIDO_FOND_AJENOS,'#13#10'        SUM(COALESCE(CarVe_Int' +
+        'eres, 0)) AS Interes,'#13#10'        SUM(COALESCE(CarVe_Recargo, 0)) A' +
+        'S Recargo,'#13#10'        SUM('#13#10'            COALESCE(CarVe_IPU, 0) +'#13#10 +
+        '            COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'           ' +
+        ' COALESCE(CarVe_SolNoEdif, 0) +'#13#10'            COALESCE(CarVe_Cons' +
+        'tObsoleta, 0) +'#13#10'            COALESCE(CarVe_SNERecargo, 0) +'#13#10'  ' +
+        '          COALESCE(CarVe_Valor1, 0) +'#13#10'            COALESCE(CarV' +
+        'e_Valor2, 0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) +'#13#10'     ' +
+        '       COALESCE(CarVe_Interes, 0) +'#13#10'            COALESCE(CarVe_' +
+        'Recargo, 0)'#13#10'        ) AS TOTAL'#13#10'    FROM CARTERA_VENCIDA'#13#10'    W' +
+        'HERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PU'#39#13#10'      AND CarVe_Es' +
+        'tado IN ('#39'C'#39', '#39'Q'#39')'#13#10#13#10#13#10'      AND YEAR(CarVe_FechaEmision) IN ('#13 +
+        #10'          SELECT YEAR(CarVe_FechaEmision)'#13#10'          FROM CARTE' +
+        'RA_VENCIDA'#13#10'          WHERE CarVe_FechaRecaudacion BETWEEN :FECH' +
+        'A_DESDE AND :FECHA_HASTA'#13#10'          and RIGHT(RTRIM(CarVe_NumTit' +
+        'ulo), 2) = '#39'PU'#39#13#10'          GROUP BY CarVe_FechaEmision'#13#10'      )'#13 +
+        #10#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') c'#13#10'ON COALESCE(a.per' +
+        'iodo, b.periodo) = c.periodo'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13#10'    -- Bajas' +
+        ' del d'#237'a (cuarto SELECT)'#13#10'    SELECT'#13#10'        YEAR(CarVe_FechaEm' +
+        'ision) AS periodo,'#13#10'        SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13 +
+        #10'        SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdmin' +
+        'istrativa,'#13#10'        SUM(COALESCE(CarVe_SolNoEdif, 0)) AS SolNoEd' +
+        'if,'#13#10'        SUM(COALESCE(CarVe_ConstObsoleta, 0)) AS ConstObsol' +
+        'eta,'#13#10'        SUM(COALESCE(CarVe_SNERecargo, 0)) AS SNERecargo,'#13 +
+        #10'        SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'        SUM(' +
+        'COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10'        SUM('#13#10'           ' +
+        ' COALESCE(CarVe_IPU, 0) +'#13#10'            COALESCE(CarVe_TasaAdmini' +
+        'strativa, 0) +'#13#10'            COALESCE(CarVe_SolNoEdif, 0) +'#13#10'    ' +
+        '        COALESCE(CarVe_ConstObsoleta, 0) +'#13#10'            COALESCE' +
+        '(CarVe_SNERecargo, 0) +'#13#10'            COALESCE(CarVe_Valor1, 0) +' +
+        #13#10'            COALESCE(CarVe_Valor2, 0)'#13#10'        ) AS EMITIDO_FO' +
+        'ND_PROPIOS,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0)) AS Bombero' +
+        's,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0)) AS EMITIDO_FOND_AJE' +
+        'NOS,'#13#10'        SUM(COALESCE(CarVe_Interes, 0)) AS Interes,'#13#10'     ' +
+        '   SUM(COALESCE(CarVe_Recargo, 0)) AS Recargo,'#13#10'        SUM('#13#10'  ' +
+        '          COALESCE(CarVe_IPU, 0) +'#13#10'            COALESCE(CarVe_T' +
+        'asaAdministrativa, 0) +'#13#10'            COALESCE(CarVe_SolNoEdif, 0' +
+        ') +'#13#10'            COALESCE(CarVe_ConstObsoleta, 0) +'#13#10'           ' +
+        ' COALESCE(CarVe_SNERecargo, 0) +'#13#10'            COALESCE(CarVe_Val' +
+        'or1, 0) +'#13#10'            COALESCE(CarVe_Valor2, 0) +'#13#10'            ' +
+        'COALESCE(CarVe_Bomberos, 0) +'#13#10'            COALESCE(CarVe_Intere' +
+        's, 0) +'#13#10'            COALESCE(CarVe_Recargo, 0)'#13#10'        ) AS TO' +
+        'TAL'#13#10'    FROM CARTERA_VENCIDA'#13#10'    WHERE RIGHT(RTRIM(CarVe_NumTi' +
+        'tulo), 2) = '#39'PU'#39#13#10'      AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'      AN' +
+        'D CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10 +
+        '    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') d'#13#10'ON COALESCE(COALESCE' +
+        '(a.periodo, b.periodo), c.periodo) = d.periodo'#13#10#13#10'FULL OUTER JOI' +
+        'N'#13#10'('#13#10'    -- Bajas Acumuladas (quinto SELECT)'#13#10'    SELECT'#13#10'     ' +
+        '   YEAR(CarVe_FechaEmision) AS periodo,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_IPU, 0)) AS IPU,'#13#10'        SUM(COALESCE(CarVe_TasaAdministrat' +
+        'iva, 0)) AS TasaAdministrativa,'#13#10'        SUM(COALESCE(CarVe_SolN' +
+        'oEdif, 0)) AS SolNoEdif,'#13#10'        SUM(COALESCE(CarVe_ConstObsole' +
+        'ta, 0)) AS ConstObsoleta,'#13#10'        SUM(COALESCE(CarVe_SNERecargo' +
+        ', 0)) AS SNERecargo,'#13#10'        SUM(COALESCE(CarVe_Valor1, 0)) AS ' +
+        'Valor1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10'    ' +
+        '    SUM('#13#10'            COALESCE(CarVe_IPU, 0) +'#13#10'            COAL' +
+        'ESCE(CarVe_TasaAdministrativa, 0) +'#13#10'            COALESCE(CarVe_' +
+        'SolNoEdif, 0) +'#13#10'            COALESCE(CarVe_ConstObsoleta, 0) +'#13 +
+        #10'            COALESCE(CarVe_SNERecargo, 0) +'#13#10'            COALES' +
+        'CE(CarVe_Valor1, 0) +'#13#10'            COALESCE(CarVe_Valor2, 0)'#13#10'  ' +
+        '      ) AS EMITIDO_FOND_PROPIOS,'#13#10'        SUM(COALESCE(CarVe_Bom' +
+        'beros, 0)) AS Bomberos,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0)' +
+        ') AS EMITIDO_FOND_AJENOS,'#13#10'        SUM(COALESCE(CarVe_Interes, 0' +
+        ')) AS Interes,'#13#10'        SUM(COALESCE(CarVe_Recargo, 0)) AS Recar' +
+        'go,'#13#10'        SUM('#13#10'            COALESCE(CarVe_IPU, 0) +'#13#10'       ' +
+        '     COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'            COALES' +
+        'CE(CarVe_SolNoEdif, 0) +'#13#10'            COALESCE(CarVe_ConstObsole' +
+        'ta, 0) +'#13#10'            COALESCE(CarVe_SNERecargo, 0) +'#13#10'         ' +
+        '   COALESCE(CarVe_Valor1, 0) +'#13#10'            COALESCE(CarVe_Valor' +
+        '2, 0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) +'#13#10'            ' +
+        'COALESCE(CarVe_Interes, 0) +'#13#10'            COALESCE(CarVe_Recargo' +
+        ', 0)'#13#10'        ) AS TOTAL'#13#10'    FROM CARTERA_VENCIDA'#13#10'    WHERE RI' +
+        'GHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PU'#39#13#10'      AND CarVe_Estado IN' +
+        ' ('#39'B'#39', '#39'J'#39')'#13#10#13#10#13#10'      AND YEAR(CarVe_FechaEmision) IN ('#13#10'      ' +
+        '    SELECT YEAR(CarVe_FechaEmision)'#13#10'          FROM CARTERA_VENC' +
+        'IDA'#13#10'          WHERE CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE' +
+        ' AND :FECHA_HASTA'#13#10'          and RIGHT(RTRIM(CarVe_NumTitulo), 2' +
+        ') = '#39'PU'#39#13#10'          GROUP BY CarVe_FechaEmision'#13#10'      )'#13#10#13#10'    ' +
+        '  '#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') e'#13#10'ON COALESCE(a.pe' +
+        'riodo, b.periodo, c.periodo, d.periodo) = e.periodo'#13#10#13#10'ORDER BY ' +
+        'periodo DESC;'
     end
     item
       Alias = 'CABECERA'
@@ -58,149 +232,188 @@ object TRpReport
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
-        'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'U'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion ASC'
+        'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'R'#39#13#10'     AND CoeDeE_Valor =' +
+        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC'
     end
     item
       Alias = 'NUEVO_VALOR_2'
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
         'SELECT TOP 1 CoeDeE_Descripcion'#13#10'     FROM [dbo].[PARAMETROS_GEN' +
-        'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'U'#39#13#10'     AND CoeDeE_Valor =' +
-        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion DESC'
+        'ERALES]'#13#10'     WHERE CoeDeE_Estado = '#39'R'#39#13#10'     AND CoeDeE_Valor =' +
+        ' 0'#13#10#9' ORDER BY CoeDeE_Descripcion ASC'
     end
     item
       Alias = 'INGRESO_DIA'
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
         'SELECT'#13#10'    YEAR(CarVe_FechaEmision) AS periodo,'#13#10#13#10'    -- Fondo' +
-        's Propios'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'    SUM(COAL' +
-        'ESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdministrativa,'#13#10'    S' +
-        'UM(COALESCE(CarVe_SolNoEdif, 0)) AS SolNoEdif,'#13#10'    SUM(COALESCE' +
-        '(CarVe_ConstObsoleta, 0)) AS ConstObsoleta,'#13#10'    SUM(COALESCE(Ca' +
-        'rVe_SNERecargo, 0)) AS SNERecargo,'#13#10'    SUM(COALESCE(CarVe_Valor' +
-        '1, 0)) AS Valor1,'#13#10'    SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,' +
-        #13#10#13#10'    -- FONDOS_PROPIOS seg'#250'n regla'#13#10'    SUM('#13#10'        COALESC' +
-        'E(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0)' +
-        ' +'#13#10'        COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(Car' +
-        'Ve_ConstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13 +
-        #10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Val' +
-        'or2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- FONDOS_AJENOS ' +
-        'seg'#250'n regla'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10 +
-        '    SUM(COALESCE(CarVe_Bomberos, 0)) AS EMITIDO_FOND_AJENOS,'#13#10#13#10 +
-        '    -- Inter'#233's y Recargo'#13#10'    SUM(COALESCE(CarVe_Interes, 0)) AS' +
-        ' Interes,'#13#10'    SUM(COALESCE(CarVe_Recargo, 0)) AS Recargo,'#13#10#13#10'  ' +
-        '  -- Total con inter'#233's y recargo'#13#10'    SUM('#13#10'        COALESCE(Car' +
-        'Ve_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10' ' +
-        '       COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(CarVe_Co' +
-        'nstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13#10'    ' +
-        '    COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, ' +
-        '0) +'#13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(Ca' +
-        'rVe_Interes, 0) +'#13#10'        COALESCE(CarVe_Recargo, 0)'#13#10'    ) AS ' +
-        'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
-        '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND CarVe_Fech' +
-        'aRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'GROUP BY YEA' +
-        'R(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10
+        's Propios (componentes)'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,' +
+        #13#10'    SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdminist' +
+        'rativa,'#13#10'    SUM(COALESCE(CarVe_Magisterio, 0)) AS Magisterio,'#13#10 +
+        '    SUM(COALESCE(CarVe_EducacionElemental, 0)) AS EducacionEleme' +
+        'ntal,'#13#10'    SUM(COALESCE(CarVe_MedicinaRural, 0)) AS MedicinaRura' +
+        'l,'#13#10'    SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS OtrosAdicion' +
+        'ales,'#13#10'    SUM(COALESCE(CarVe_RecoleccionBasura, 0)) AS Recolecc' +
+        'ionBasura,'#13#10'    SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'    S' +
+        'UM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10#13#10'    -- FONDOS_PROPIO' +
+        'S'#13#10'    SUM('#13#10'        COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(' +
+        'CarVe_TasaAdministrativa, 0) +'#13#10'        COALESCE(CarVe_Magisteri' +
+        'o, 0) +'#13#10'        COALESCE(CarVe_EducacionElemental, 0) +'#13#10'      ' +
+        '  COALESCE(CarVe_MedicinaRural, 0) +'#13#10'        COALESCE(CarVe_Otr' +
+        'osAdicionales, 0) +'#13#10'        COALESCE(CarVe_RecoleccionBasura, 0' +
+        ') +'#13#10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe' +
+        '_Valor2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- Fondos Aje' +
+        'nos (componentes)'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bombe' +
+        'ros,'#13#10'    SUM(COALESCE(CarVe_ViviendaRural, 0)) AS ViviendaRural' +
+        ','#13#10'    SUM(COALESCE(CarVe_EstablecEducativos, 0)) AS EstablecEdu' +
+        'cativos,'#13#10#13#10'    -- FONDOS_AJENOS'#13#10'    SUM('#13#10'        COALESCE(Car' +
+        'Ve_Bomberos, 0) +'#13#10'        COALESCE(CarVe_ViviendaRural, 0) +'#13#10' ' +
+        '       COALESCE(CarVe_EstablecEducativos, 0)'#13#10'    ) AS EMITIDO_F' +
+        'OND_AJENOS,'#13#10#13#10'    -- Inter'#233's'#13#10'    SUM(COALESCE(CarVe_Interes, 0' +
+        ')) AS Interes,'#13#10#13#10'    -- TOTAL (sin recargo)'#13#10'    SUM('#13#10'        ' +
+        'COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrat' +
+        'iva, 0) +'#13#10'        COALESCE(CarVe_Magisterio, 0) +'#13#10'        COAL' +
+        'ESCE(CarVe_EducacionElemental, 0) +'#13#10'        COALESCE(CarVe_Medi' +
+        'cinaRural, 0) +'#13#10'        COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10 +
+        '        COALESCE(CarVe_RecoleccionBasura, 0) +'#13#10'        COALESCE' +
+        '(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, 0) +'#13#10'      ' +
+        '  COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(CarVe_Vivienda' +
+        'Rural, 0) +'#13#10'        COALESCE(CarVe_EstablecEducativos, 0) +'#13#10'  ' +
+        '      COALESCE(CarVe_Interes, 0)'#13#10'    ) AS TOTAL'#13#10#13#10'FROM CARTERA' +
+        '_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AND C' +
+        'arVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND CarVe_FechaRecaudacion BETWEEN ' +
+        ':FECHA_DESDE AND :FECHA_HASTA'#13#10'GROUP BY YEAR(CarVe_FechaEmision)' +
+        #13#10'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10
     end
     item
       Alias = 'INGRESO_ACUMULADO'
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
         'SELECT'#13#10'    YEAR(CarVe_FechaEmision) AS periodo,'#13#10#13#10'    -- Fondo' +
-        's Propios'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'    SUM(COAL' +
-        'ESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdministrativa,'#13#10'    S' +
-        'UM(COALESCE(CarVe_SolNoEdif, 0)) AS SolNoEdif,'#13#10'    SUM(COALESCE' +
-        '(CarVe_ConstObsoleta, 0)) AS ConstObsoleta,'#13#10'    SUM(COALESCE(Ca' +
-        'rVe_SNERecargo, 0)) AS SNERecargo,'#13#10'    SUM(COALESCE(CarVe_Valor' +
-        '1, 0)) AS Valor1,'#13#10'    SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,' +
-        #13#10#13#10'    -- FONDOS_PROPIOS seg'#250'n regla'#13#10'    SUM('#13#10'        COALESC' +
-        'E(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0)' +
-        ' +'#13#10'        COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(Car' +
-        'Ve_ConstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13 +
-        #10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Val' +
-        'or2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- FONDOS_AJENOS ' +
-        'seg'#250'n regla'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10 +
-        '    SUM(COALESCE(CarVe_Bomberos, 0)) AS EMITIDO_FOND_AJENOS,'#13#10#13#10 +
-        '    -- Inter'#233's y Recargo'#13#10'    SUM(COALESCE(CarVe_Interes, 0)) AS' +
-        ' Interes,'#13#10'    SUM(COALESCE(CarVe_Recargo, 0)) AS Recargo,'#13#10#13#10'  ' +
-        '  -- Total con inter'#233's y recargo'#13#10'    SUM('#13#10'        COALESCE(Car' +
-        'Ve_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10' ' +
-        '       COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(CarVe_Co' +
-        'nstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13#10'    ' +
-        '    COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, ' +
-        '0) +'#13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(Ca' +
-        'rVe_Interes, 0) +'#13#10'        COALESCE(CarVe_Recargo, 0)'#13#10'    ) AS ' +
-        'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
-        '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND CarVe_Fech' +
-        'aRecaudacion < :FECHA_DESDE'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10 +
-        'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10#13#10#13#10#13#10#13#10#13#10#13#10#13#10
+        's Propios (componentes)'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,' +
+        #13#10'    SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdminist' +
+        'rativa,'#13#10'    SUM(COALESCE(CarVe_Magisterio, 0)) AS Magisterio,'#13#10 +
+        '    SUM(COALESCE(CarVe_EducacionElemental, 0)) AS EducacionEleme' +
+        'ntal,'#13#10'    SUM(COALESCE(CarVe_MedicinaRural, 0)) AS MedicinaRura' +
+        'l,'#13#10'    SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS OtrosAdicion' +
+        'ales,'#13#10'    SUM(COALESCE(CarVe_RecoleccionBasura, 0)) AS Recolecc' +
+        'ionBasura,'#13#10'    SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'    S' +
+        'UM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10#13#10'    -- FONDOS_PROPIO' +
+        'S'#13#10'    SUM('#13#10'        COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(' +
+        'CarVe_TasaAdministrativa, 0) +'#13#10'        COALESCE(CarVe_Magisteri' +
+        'o, 0) +'#13#10'        COALESCE(CarVe_EducacionElemental, 0) +'#13#10'      ' +
+        '  COALESCE(CarVe_MedicinaRural, 0) +'#13#10'        COALESCE(CarVe_Otr' +
+        'osAdicionales, 0) +'#13#10'        COALESCE(CarVe_RecoleccionBasura, 0' +
+        ') +'#13#10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe' +
+        '_Valor2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- Fondos Aje' +
+        'nos (componentes)'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bombe' +
+        'ros,'#13#10'    SUM(COALESCE(CarVe_ViviendaRural, 0)) AS ViviendaRural' +
+        ','#13#10'    SUM(COALESCE(CarVe_EstablecEducativos, 0)) AS EstablecEdu' +
+        'cativos,'#13#10#13#10'    -- FONDOS_AJENOS'#13#10'    SUM('#13#10'        COALESCE(Car' +
+        'Ve_Bomberos, 0) +'#13#10'        COALESCE(CarVe_ViviendaRural, 0) +'#13#10' ' +
+        '       COALESCE(CarVe_EstablecEducativos, 0)'#13#10'    ) AS EMITIDO_F' +
+        'OND_AJENOS,'#13#10#13#10'    -- Inter'#233's'#13#10'    SUM(COALESCE(CarVe_Interes, 0' +
+        ')) AS Interes,'#13#10#13#10'    -- TOTAL (sin recargo)'#13#10'    SUM('#13#10'        ' +
+        'COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrat' +
+        'iva, 0) +'#13#10'        COALESCE(CarVe_Magisterio, 0) +'#13#10'        COAL' +
+        'ESCE(CarVe_EducacionElemental, 0) +'#13#10'        COALESCE(CarVe_Medi' +
+        'cinaRural, 0) +'#13#10'        COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10 +
+        '        COALESCE(CarVe_RecoleccionBasura, 0) +'#13#10'        COALESCE' +
+        '(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, 0) +'#13#10'      ' +
+        '  COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(CarVe_Vivienda' +
+        'Rural, 0) +'#13#10'        COALESCE(CarVe_EstablecEducativos, 0) +'#13#10'  ' +
+        '      COALESCE(CarVe_Interes, 0)'#13#10'    ) AS TOTAL'#13#10#13#10'FROM CARTERA' +
+        '_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AND C' +
+        'arVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND CarVe_FechaRecaudacion < :FECHA' +
+        '_DESDE'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_F' +
+        'echaEmision) DESC;'#13#10#13#10#13#10#13#10#13#10#13#10#13#10#13#10
     end
     item
       Alias = 'BAJAS_DIA'
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
         'SELECT'#13#10'    YEAR(CarVe_FechaEmision) AS periodo,'#13#10#13#10'    -- Fondo' +
-        's Propios'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'    SUM(COAL' +
-        'ESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdministrativa,'#13#10'    S' +
-        'UM(COALESCE(CarVe_SolNoEdif, 0)) AS SolNoEdif,'#13#10'    SUM(COALESCE' +
-        '(CarVe_ConstObsoleta, 0)) AS ConstObsoleta,'#13#10'    SUM(COALESCE(Ca' +
-        'rVe_SNERecargo, 0)) AS SNERecargo,'#13#10'    SUM(COALESCE(CarVe_Valor' +
-        '1, 0)) AS Valor1,'#13#10'    SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,' +
-        #13#10#13#10'    -- FONDOS_PROPIOS seg'#250'n regla'#13#10'    SUM('#13#10'        COALESC' +
-        'E(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0)' +
-        ' +'#13#10'        COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(Car' +
-        'Ve_ConstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13 +
-        #10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Val' +
-        'or2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- FONDOS_AJENOS ' +
-        'seg'#250'n regla'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10 +
-        '    SUM(COALESCE(CarVe_Bomberos, 0)) AS EMITIDO_FOND_AJENOS,'#13#10#13#10 +
-        '    -- Inter'#233's y Recargo'#13#10'    SUM(COALESCE(CarVe_Interes, 0)) AS' +
-        ' Interes,'#13#10'    SUM(COALESCE(CarVe_Recargo, 0)) AS Recargo,'#13#10#13#10'  ' +
-        '  -- Total con inter'#233's y recargo'#13#10'    SUM('#13#10'        COALESCE(Car' +
-        'Ve_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10' ' +
-        '       COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(CarVe_Co' +
-        'nstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13#10'    ' +
-        '    COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, ' +
-        '0) +'#13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(Ca' +
-        'rVe_Interes, 0) +'#13#10'        COALESCE(CarVe_Recargo, 0)'#13#10'    ) AS ' +
-        'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
-        '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe_Fech' +
-        'aRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'GROUP BY YEA' +
-        'R(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10 +
-        #13#10#13#10
+        's Propios (componentes)'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,' +
+        #13#10'    SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdminist' +
+        'rativa,'#13#10'    SUM(COALESCE(CarVe_Magisterio, 0)) AS Magisterio,'#13#10 +
+        '    SUM(COALESCE(CarVe_EducacionElemental, 0)) AS EducacionEleme' +
+        'ntal,'#13#10'    SUM(COALESCE(CarVe_MedicinaRural, 0)) AS MedicinaRura' +
+        'l,'#13#10'    SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS OtrosAdicion' +
+        'ales,'#13#10'    SUM(COALESCE(CarVe_RecoleccionBasura, 0)) AS Recolecc' +
+        'ionBasura,'#13#10'    SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'    S' +
+        'UM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10#13#10'    -- FONDOS_PROPIO' +
+        'S'#13#10'    SUM('#13#10'        COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(' +
+        'CarVe_TasaAdministrativa, 0) +'#13#10'        COALESCE(CarVe_Magisteri' +
+        'o, 0) +'#13#10'        COALESCE(CarVe_EducacionElemental, 0) +'#13#10'      ' +
+        '  COALESCE(CarVe_MedicinaRural, 0) +'#13#10'        COALESCE(CarVe_Otr' +
+        'osAdicionales, 0) +'#13#10'        COALESCE(CarVe_RecoleccionBasura, 0' +
+        ') +'#13#10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe' +
+        '_Valor2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- Fondos Aje' +
+        'nos (componentes)'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bombe' +
+        'ros,'#13#10'    SUM(COALESCE(CarVe_ViviendaRural, 0)) AS ViviendaRural' +
+        ','#13#10'    SUM(COALESCE(CarVe_EstablecEducativos, 0)) AS EstablecEdu' +
+        'cativos,'#13#10#13#10'    -- FONDOS_AJENOS'#13#10'    SUM('#13#10'        COALESCE(Car' +
+        'Ve_Bomberos, 0) +'#13#10'        COALESCE(CarVe_ViviendaRural, 0) +'#13#10' ' +
+        '       COALESCE(CarVe_EstablecEducativos, 0)'#13#10'    ) AS EMITIDO_F' +
+        'OND_AJENOS,'#13#10#13#10'    -- Inter'#233's'#13#10'    SUM(COALESCE(CarVe_Interes, 0' +
+        ')) AS Interes,'#13#10#13#10'    -- TOTAL (sin recargo)'#13#10'    SUM('#13#10'        ' +
+        'COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrat' +
+        'iva, 0) +'#13#10'        COALESCE(CarVe_Magisterio, 0) +'#13#10'        COAL' +
+        'ESCE(CarVe_EducacionElemental, 0) +'#13#10'        COALESCE(CarVe_Medi' +
+        'cinaRural, 0) +'#13#10'        COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10 +
+        '        COALESCE(CarVe_RecoleccionBasura, 0) +'#13#10'        COALESCE' +
+        '(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, 0) +'#13#10'      ' +
+        '  COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(CarVe_Vivienda' +
+        'Rural, 0) +'#13#10'        COALESCE(CarVe_EstablecEducativos, 0) +'#13#10'  ' +
+        '      COALESCE(CarVe_Interes, 0)'#13#10'    ) AS TOTAL'#13#10#13#10'FROM CARTERA' +
+        '_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AND C' +
+        'arVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe_FechaRecaudacion BETWEEN ' +
+        ':FECHA_DESDE AND :FECHA_HASTA'#13#10'GROUP BY YEAR(CarVe_FechaEmision)' +
+        #13#10'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10#13#10#13#10
     end
     item
       Alias = 'BAJAS_ACUMULADAS'
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
         'SELECT'#13#10'    YEAR(CarVe_FechaEmision) AS periodo,'#13#10#13#10'    -- Fondo' +
-        's Propios'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'    SUM(COAL' +
-        'ESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdministrativa,'#13#10'    S' +
-        'UM(COALESCE(CarVe_SolNoEdif, 0)) AS SolNoEdif,'#13#10'    SUM(COALESCE' +
-        '(CarVe_ConstObsoleta, 0)) AS ConstObsoleta,'#13#10'    SUM(COALESCE(Ca' +
-        'rVe_SNERecargo, 0)) AS SNERecargo,'#13#10'    SUM(COALESCE(CarVe_Valor' +
-        '1, 0)) AS Valor1,'#13#10'    SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,' +
-        #13#10#13#10'    -- FONDOS_PROPIOS seg'#250'n regla'#13#10'    SUM('#13#10'        COALESC' +
-        'E(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0)' +
-        ' +'#13#10'        COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(Car' +
-        'Ve_ConstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13 +
-        #10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Val' +
-        'or2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- FONDOS_AJENOS ' +
-        'seg'#250'n regla'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10 +
-        '    SUM(COALESCE(CarVe_Bomberos, 0)) AS EMITIDO_FOND_AJENOS,'#13#10#13#10 +
-        '    -- Inter'#233's y Recargo'#13#10'    SUM(COALESCE(CarVe_Interes, 0)) AS' +
-        ' Interes,'#13#10'    SUM(COALESCE(CarVe_Recargo, 0)) AS Recargo,'#13#10#13#10'  ' +
-        '  -- Total con inter'#233's y recargo'#13#10'    SUM('#13#10'        COALESCE(Car' +
-        'Ve_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10' ' +
-        '       COALESCE(CarVe_SolNoEdif, 0) +'#13#10'        COALESCE(CarVe_Co' +
-        'nstObsoleta, 0) +'#13#10'        COALESCE(CarVe_SNERecargo, 0) +'#13#10'    ' +
-        '    COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, ' +
-        '0) +'#13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(Ca' +
-        'rVe_Interes, 0) +'#13#10'        COALESCE(CarVe_Recargo, 0)'#13#10'    ) AS ' +
-        'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
-        '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe_Fech' +
-        'aRecaudacion < :FECHA_DESDE'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10 +
-        'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10#13#10#13#10#13#10
+        's Propios (componentes)'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,' +
+        #13#10'    SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdminist' +
+        'rativa,'#13#10'    SUM(COALESCE(CarVe_Magisterio, 0)) AS Magisterio,'#13#10 +
+        '    SUM(COALESCE(CarVe_EducacionElemental, 0)) AS EducacionEleme' +
+        'ntal,'#13#10'    SUM(COALESCE(CarVe_MedicinaRural, 0)) AS MedicinaRura' +
+        'l,'#13#10'    SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS OtrosAdicion' +
+        'ales,'#13#10'    SUM(COALESCE(CarVe_RecoleccionBasura, 0)) AS Recolecc' +
+        'ionBasura,'#13#10'    SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'    S' +
+        'UM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10#13#10'    -- FONDOS_PROPIO' +
+        'S'#13#10'    SUM('#13#10'        COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(' +
+        'CarVe_TasaAdministrativa, 0) +'#13#10'        COALESCE(CarVe_Magisteri' +
+        'o, 0) +'#13#10'        COALESCE(CarVe_EducacionElemental, 0) +'#13#10'      ' +
+        '  COALESCE(CarVe_MedicinaRural, 0) +'#13#10'        COALESCE(CarVe_Otr' +
+        'osAdicionales, 0) +'#13#10'        COALESCE(CarVe_RecoleccionBasura, 0' +
+        ') +'#13#10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe' +
+        '_Valor2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- Fondos Aje' +
+        'nos (componentes)'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bombe' +
+        'ros,'#13#10'    SUM(COALESCE(CarVe_ViviendaRural, 0)) AS ViviendaRural' +
+        ','#13#10'    SUM(COALESCE(CarVe_EstablecEducativos, 0)) AS EstablecEdu' +
+        'cativos,'#13#10#13#10'    -- FONDOS_AJENOS'#13#10'    SUM('#13#10'        COALESCE(Car' +
+        'Ve_Bomberos, 0) +'#13#10'        COALESCE(CarVe_ViviendaRural, 0) +'#13#10' ' +
+        '       COALESCE(CarVe_EstablecEducativos, 0)'#13#10'    ) AS EMITIDO_F' +
+        'OND_AJENOS,'#13#10#13#10'    -- Inter'#233's'#13#10'    SUM(COALESCE(CarVe_Interes, 0' +
+        ')) AS Interes,'#13#10#13#10'    -- TOTAL (sin recargo)'#13#10'    SUM('#13#10'        ' +
+        'COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrat' +
+        'iva, 0) +'#13#10'        COALESCE(CarVe_Magisterio, 0) +'#13#10'        COAL' +
+        'ESCE(CarVe_EducacionElemental, 0) +'#13#10'        COALESCE(CarVe_Medi' +
+        'cinaRural, 0) +'#13#10'        COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10 +
+        '        COALESCE(CarVe_RecoleccionBasura, 0) +'#13#10'        COALESCE' +
+        '(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, 0) +'#13#10'      ' +
+        '  COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(CarVe_Vivienda' +
+        'Rural, 0) +'#13#10'        COALESCE(CarVe_EstablecEducativos, 0) +'#13#10'  ' +
+        '      COALESCE(CarVe_Interes, 0)'#13#10'    ) AS TOTAL'#13#10#13#10'FROM CARTERA' +
+        '_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AND C' +
+        'arVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe_FechaRecaudacion < :FECHA' +
+        '_DESDE'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_F' +
+        'echaEmision) DESC;'#13#10#13#10#13#10#13#10
     end>
   DatabaseInfo = <
     item
@@ -221,7 +434,7 @@ object TRpReport
     item
       Name = 'FECHA_DESDE'
       AllowNulls = False
-      Value = Null
+      Value = 45805d
       ParamType = rpParamDateTime
       Datasets.Strings = (
         'DATOS'
@@ -239,7 +452,7 @@ object TRpReport
     item
       Name = 'FECHA_HASTA'
       AllowNulls = False
-      Value = Null
+      Value = 45805.9999884259d
       ParamType = rpParamDateTime
       Datasets.Strings = (
         'DATOS'
@@ -289,6 +502,7 @@ object TRpReport
         Section = TRpSection6
       end>
     Alias = 'DATOS'
+    PrintOnlyIfDataAvailable = False
   end
   object TRpSection0: TRpSection
     Width = 11010
@@ -313,21 +527,6 @@ object TRpReport
         Component = TRpLabel13
       end
       item
-        Component = TRpLabel15
-      end
-      item
-        Component = TRpLabel16
-      end
-      item
-        Component = TRpLabel17
-      end
-      item
-        Component = TRpExpression4
-      end
-      item
-        Component = TRpExpression13
-      end
-      item
         Component = TRpLabel18
       end
       item
@@ -337,28 +536,10 @@ object TRpReport
         Component = TRpLabel20
       end
       item
-        Component = TRpLabel21
-      end
-      item
         Component = TRpLabel22
       end
       item
         Component = TRpExpression2
-      end
-      item
-        Component = TRpExpression5
-      end
-      item
-        Component = TRpExpression6
-      end
-      item
-        Component = TRpExpression7
-      end
-      item
-        Component = TRpExpression9
-      end
-      item
-        Component = TRpExpression10
       end
       item
         Component = TRpExpression11
@@ -373,58 +554,13 @@ object TRpReport
         Component = TRpShape7
       end
       item
-        Component = TRpExpression15
-      end
-      item
-        Component = TRpExpression16
-      end
-      item
-        Component = TRpExpression17
-      end
-      item
-        Component = TRpExpression18
-      end
-      item
-        Component = TRpExpression19
-      end
-      item
         Component = TRpExpression20
       end
       item
         Component = TRpExpression23
       end
       item
-        Component = TRpExpression24
-      end
-      item
-        Component = TRpExpression25
-      end
-      item
-        Component = TRpExpression26
-      end
-      item
-        Component = TRpExpression27
-      end
-      item
-        Component = TRpExpression28
-      end
-      item
         Component = TRpExpression29
-      end
-      item
-        Component = TRpExpression30
-      end
-      item
-        Component = TRpExpression31
-      end
-      item
-        Component = TRpExpression32
-      end
-      item
-        Component = TRpExpression33
-      end
-      item
-        Component = TRpExpression34
       end
       item
         Component = TRpExpression35
@@ -436,37 +572,7 @@ object TRpReport
         Component = TRpExpression39
       end
       item
-        Component = TRpExpression40
-      end
-      item
-        Component = TRpExpression41
-      end
-      item
-        Component = TRpExpression42
-      end
-      item
-        Component = TRpExpression43
-      end
-      item
-        Component = TRpExpression44
-      end
-      item
         Component = TRpExpression45
-      end
-      item
-        Component = TRpExpression46
-      end
-      item
-        Component = TRpExpression47
-      end
-      item
-        Component = TRpExpression48
-      end
-      item
-        Component = TRpExpression49
-      end
-      item
-        Component = TRpExpression50
       end
       item
         Component = TRpExpression51
@@ -523,28 +629,13 @@ object TRpReport
         Component = TRpExpression68
       end
       item
-        Component = TRpExpression69
-      end
-      item
         Component = TRpExpression70
-      end
-      item
-        Component = TRpExpression71
       end
       item
         Component = TRpExpression72
       end
       item
-        Component = TRpExpression73
-      end
-      item
-        Component = TRpExpression74
-      end
-      item
         Component = TRpExpression75
-      end
-      item
-        Component = TRpExpression76
       end
       item
         Component = TRpExpression77
@@ -553,10 +644,133 @@ object TRpReport
         Component = TRpExpression78
       end
       item
+        Component = TRpExpression80
+      end
+      item
+        Component = TRpExpression96
+      end
+      item
+        Component = TRpExpression97
+      end
+      item
+        Component = TRpExpression98
+      end
+      item
+        Component = TRpExpression99
+      end
+      item
+        Component = TRpExpression100
+      end
+      item
+        Component = TRpExpression101
+      end
+      item
+        Component = TRpExpression102
+      end
+      item
+        Component = TRpExpression49
+      end
+      item
+        Component = TRpExpression50
+      end
+      item
+        Component = TRpExpression89
+      end
+      item
+        Component = TRpExpression90
+      end
+      item
+        Component = TRpExpression91
+      end
+      item
+        Component = TRpExpression92
+      end
+      item
+        Component = TRpExpression93
+      end
+      item
+        Component = TRpExpression69
+      end
+      item
+        Component = TRpExpression71
+      end
+      item
+        Component = TRpExpression73
+      end
+      item
+        Component = TRpExpression74
+      end
+      item
+        Component = TRpExpression76
+      end
+      item
         Component = TRpExpression79
       end
       item
-        Component = TRpExpression80
+        Component = TRpLabel21
+      end
+      item
+        Component = TRpExpression4
+      end
+      item
+        Component = TRpExpression5
+      end
+      item
+        Component = TRpExpression6
+      end
+      item
+        Component = TRpExpression7
+      end
+      item
+        Component = TRpExpression9
+      end
+      item
+        Component = TRpExpression10
+      end
+      item
+        Component = TRpLabel15
+      end
+      item
+        Component = TRpExpression13
+      end
+      item
+        Component = TRpExpression15
+      end
+      item
+        Component = TRpExpression16
+      end
+      item
+        Component = TRpExpression17
+      end
+      item
+        Component = TRpExpression18
+      end
+      item
+        Component = TRpLabel16
+      end
+      item
+        Component = TRpExpression19
+      end
+      item
+        Component = TRpExpression24
+      end
+      item
+        Component = TRpExpression25
+      end
+      item
+        Component = TRpExpression26
+      end
+      item
+        Component = TRpExpression27
+      end
+      item
+        Component = TRpExpression28
+      end
+      item
+        Component = TRpLabel17
+      end
+      item
+        Component = TRpExpression30
       end>
     AutoExpand = True
     AutoContract = True
@@ -578,7 +792,7 @@ object TRpReport
   end
   object TRpSection1: TRpSection
     Width = 11010
-    Height = 1980
+    Height = 2010
     SubReport = TRpSubReport0
     ChangeBool = False
     PageRepeat = False
@@ -586,6 +800,9 @@ object TRpReport
     AlignBottom = False
     SectionType = rpsecpheader
     Components = <
+      item
+        Component = TRpShape2
+      end
       item
         Component = TRpLabel1
       end
@@ -608,13 +825,10 @@ object TRpReport
         Component = TRpExpression0
       end
       item
-        Component = TRpExpression83
+        Component = TRpExpression94
       end
       item
-        Component = TRpExpression84
-      end
-      item
-        Component = TRpShape2
+        Component = TRpExpression95
       end
       item
         Component = TRpLabel0
@@ -718,7 +932,7 @@ object TRpReport
   end
   object TRpSection3: TRpSection
     Width = 11010
-    Height = 645
+    Height = 470
     SubReport = TRpSubReport0
     GroupName = 'NUMERO'
     ChangeBool = False
@@ -861,7 +1075,7 @@ object TRpReport
   end
   object TRpSection9: TRpSection
     Width = 11010
-    Height = 255
+    Height = 285
     SubReport = TRpSubReport0
     GroupName = 'LOGIN'
     ChangeBool = False
@@ -982,7 +1196,7 @@ object TRpReport
     Width = 1077
     Height = 255
     PosX = 2985
-    PosY = 225
+    PosY = 120
     Type1Font = poLinked
     FontSize = 7
     Alignment = 2
@@ -999,7 +1213,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.IPU'
+    Expression = 'DATOS.Emitido_IPU'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1210,7 +1424,7 @@ object TRpReport
     Width = 2551
     Height = 255
     PosX = 0
-    PosY = 225
+    PosY = 120
     Type1Font = poHelvetica
     FontSize = 8
     Alignment = 2
@@ -1221,134 +1435,11 @@ object TRpReport
     LFontName = 'Helvetica'
     WideText = 'IPU'
   end
-  object TRpLabel13: TRpLabel
-    Width = 2551
-    Height = 255
-    PosX = 0
-    PosY = 450
-    Type1Font = poHelvetica
-    FontSize = 8
-    Alignment = 2
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'TasaAdministrativa'
-  end
-  object TRpLabel15: TRpLabel
-    Width = 2551
-    Height = 255
-    PosX = 0
-    PosY = 915
-    Type1Font = poHelvetica
-    FontSize = 8
-    Alignment = 2
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'ConstObsoleta'
-  end
-  object TRpLabel16: TRpLabel
-    Width = 2551
-    Height = 255
-    PosX = 0
-    PosY = 690
-    Type1Font = poHelvetica
-    FontSize = 8
-    Alignment = 2
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'SolNoEdif'
-  end
-  object TRpLabel17: TRpLabel
-    Width = 2551
-    Height = 255
-    PosX = 0
-    PosY = 1140
-    Type1Font = poHelvetica
-    FontSize = 8
-    Alignment = 2
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'SNERecargo'
-  end
-  object TRpExpression4: TRpExpression
-    Width = 2551
-    Height = 255
-    PosX = 0
-    PosY = 1380
-    Type1Font = poHelvetica
-    FontSize = 8
-    Alignment = 2
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'NUEVO_VALOR_1.CoeDeE_Descripcion'
-    DisplayFormat = ''
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression13: TRpExpression
-    Width = 2551
-    Height = 255
-    PosX = 0
-    PosY = 1605
-    Type1Font = poHelvetica
-    FontSize = 8
-    Alignment = 2
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'NUEVO_VALOR_2.CoeDeE_Descripcion'
-    DisplayFormat = ''
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpLabel18: TRpLabel
-    Width = 2551
-    Height = 255
-    PosX = 0
-    PosY = 2070
-    Type1Font = poHelvetica
-    FontSize = 8
-    Alignment = 2
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'Bomberos'
-  end
   object TRpLabel19: TRpLabel
     Width = 2551
     Height = 240
     PosX = 0
-    PosY = 2520
+    PosY = 3339
     Type1Font = poHelvetica
     FontSize = 9
     Alignment = 2
@@ -1359,41 +1450,11 @@ object TRpReport
     LFontName = 'Helvetica'
     WideText = 'EMITIDO FONDOS PROPIOS'
   end
-  object TRpLabel21: TRpLabel
-    Width = 2551
-    Height = 240
-    PosX = 0
-    PosY = 3105
-    Type1Font = poHelvetica
-    FontSize = 9
-    Alignment = 2
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'RECARGOS'
-  end
-  object TRpLabel22: TRpLabel
-    Width = 2551
-    Height = 240
-    PosX = 0
-    PosY = 3340
-    Type1Font = poHelvetica
-    FontSize = 9
-    Alignment = 2
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    WideText = 'INTERES'
-  end
   object TRpLabel20: TRpLabel
     Width = 2551
     Height = 240
     PosX = 0
-    PosY = 2760
+    PosY = 3579
     Type1Font = poHelvetica
     FontSize = 9
     Alignment = 2
@@ -1403,190 +1464,6 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     WideText = 'EMITIDO FONDOS AJENOS'
-  end
-  object TRpExpression2: TRpExpression
-    Width = 1077
-    Height = 255
-    PosX = 2985
-    PosY = 450
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.TasaAdministrativa'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression5: TRpExpression
-    Width = 1077
-    Height = 255
-    PosX = 2985
-    PosY = 690
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.SolNoEdif'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression6: TRpExpression
-    Width = 1077
-    Height = 255
-    PosX = 2985
-    PosY = 915
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.ConstObsoleta'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression7: TRpExpression
-    Width = 1077
-    Height = 255
-    PosX = 2985
-    PosY = 1140
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.SNERecargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression9: TRpExpression
-    Width = 1077
-    Height = 255
-    PosX = 2985
-    PosY = 1380
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.Valor1 <' +
-      '> NULL, DATOS.Valor1, 0), NULL)'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression10: TRpExpression
-    Width = 1077
-    Height = 255
-    PosX = 2985
-    PosY = 1605
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.Valor2, NULL' +
-      ')'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression11: TRpExpression
-    Width = 1077
-    Height = 255
-    PosX = 2985
-    PosY = 2070
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.Bomberos'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
   end
   object TRpShape0: TRpShape
     Width = 10815
@@ -1604,7 +1481,7 @@ object TRpReport
     Width = 10815
     Height = 113
     PosX = 0
-    PosY = 2415
+    PosY = 3114
     Align = rpaltopbottom
     Shape = rpsHorzLine
     PenWidth = 0
@@ -1612,143 +1489,11 @@ object TRpReport
     DoBeforePrint = ''
     DoAfterPrint = ''
   end
-  object TRpExpression15: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 4032
-    PosY = 693
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.SolNoEdif'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression16: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 4032
-    PosY = 918
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.ConstObsoleta'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression17: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 4032
-    PosY = 1143
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.SNERecargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression18: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 4020
-    PosY = 1380
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(INGRESO_DIA.Va' +
-      'lor1 <> NULL, INGRESO_DIA.Valor1, 0), NULL)'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression19: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 4020
-    PosY = 1605
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, INGRESO_DIA.Valor2' +
-      ', NULL)'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
   object TRpExpression20: TRpExpression
     Width = 1304
     Height = 255
     PosX = 4032
-    PosY = 228
+    PosY = 123
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -1764,323 +1509,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.IPU'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression23: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 5292
-    PosY = 453
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.TasaAdministrativa'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression24: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 5292
-    PosY = 693
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.SolNoEdif'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression25: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 5292
-    PosY = 918
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.ConstObsoleta'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression26: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 5292
-    PosY = 1143
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.SNERecargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression27: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 5280
-    PosY = 1380
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(INGRESO_ACUMUL' +
-      'ADO.Valor1 <> NULL, INGRESO_ACUMULADO.Valor1, 0), NULL)'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression28: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 5280
-    PosY = 1605
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, INGRESO_ACUMULADO.' +
-      'Valor2, NULL)'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression29: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 6552
-    PosY = 453
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.TasaAdministrativa'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression30: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 6552
-    PosY = 693
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.SolNoEdif'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression31: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 6552
-    PosY = 918
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.ConstObsoleta'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression32: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 6552
-    PosY = 1143
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.SNERecargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression33: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 6540
-    PosY = 1380
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(BAJAS_DIA.Valo' +
-      'r1 <> NULL, BAJAS_DIA.Valor1, 0), NULL)'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression34: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 6540
-    PosY = 1605
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, BAJAS_DIA.Valor2, ' +
-      'NULL)'
+    Expression = 'DATOS.IngresoDia_IPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2090,7 +1519,7 @@ object TRpReport
     Width = 1304
     Height = 255
     PosX = 6552
-    PosY = 228
+    PosY = 123
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2106,7 +1535,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.IPU'
+    Expression = 'DATOS.BajaDia_IPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2116,7 +1545,7 @@ object TRpReport
     Width = 1304
     Height = 255
     PosX = 5292
-    PosY = 228
+    PosY = 123
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2132,333 +1561,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.IPU'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression39: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 7827
-    PosY = 453
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.TasaAdministrativa'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression40: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 7827
-    PosY = 693
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.SolNoEdif'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression41: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 7827
-    PosY = 918
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.ConstObsoleta'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression42: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 7827
-    PosY = 1143
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.SNERecargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression43: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 7815
-    PosY = 1380
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(BAJAS_ACUMULAD' +
-      'AS.Valor1 <> NULL, BAJAS_ACUMULADAS.Valor1, 0), NULL)'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression44: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 7815
-    PosY = 1605
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, BAJAS_ACUMULADAS.V' +
-      'alor2, NULL)'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression45: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 9087
-    PosY = 453
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'DATOS.TasaAdministrativa - INGRESO_DIA.TasaAdministrativa - INGR' +
-      'ESO_ACUMULADO.TasaAdministrativa - BAJAS_DIA.TasaAdministrativa ' +
-      '- BAJAS_ACUMULADAS.TasaAdministrativa'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression46: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 9087
-    PosY = 693
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'DATOS.SolNoEdif - INGRESO_DIA.SolNoEdif - INGRESO_ACUMULADO.SolN' +
-      'oEdif - BAJAS_DIA.SolNoEdif - BAJAS_ACUMULADAS.SolNoEdif'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression47: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 9087
-    PosY = 918
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'DATOS.ConstObsoleta - INGRESO_DIA.ConstObsoleta - INGRESO_ACUMUL' +
-      'ADO.ConstObsoleta - BAJAS_DIA.ConstObsoleta - BAJAS_ACUMULADAS.C' +
-      'onstObsoleta'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression48: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 9087
-    PosY = 1143
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'DATOS.SNERecargo - INGRESO_DIA.SNERecargo - INGRESO_ACUMULADO.SN' +
-      'ERecargo - BAJAS_DIA.SNERecargo - BAJAS_ACUMULADAS.SNERecargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression49: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 9075
-    PosY = 1380
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'DATOS.Valor1 - INGRESO_DIA.Valor1 - INGRESO_ACUMULADO.Valor1 - B' +
-      'AJAS_DIA.Valor1 - BAJAS_ACUMULADAS.Valor1'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression50: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 9075
-    PosY = 1605
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'DATOS.Valor2 - INGRESO_DIA.Valor2 - INGRESO_ACUMULADO.Valor2 - B' +
-      'AJAS_DIA.Valor2 - BAJAS_ACUMULADAS.Valor2'
+    Expression = 'DATOS.IngresoAcum_IPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2468,7 +1571,7 @@ object TRpReport
     Width = 1304
     Height = 255
     PosX = 9087
-    PosY = 228
+    PosY = 123
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2485,8 +1588,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.IPU - INGRESO_DIA.IPU - INGRESO_ACUMULADO.IPU - BAJAS_DIA.' +
-      'IPU - BAJAS_ACUMULADAS.IPU'
+      'DATOS.Emitido_IPU - DATOS.IngresoDia_IPU - DATOS.IngresoAcum_IPU' +
+      ' - DATOS.BajaDia_IPU - DATOS.BajasAcumIPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2496,7 +1599,7 @@ object TRpReport
     Width = 1304
     Height = 255
     PosX = 7827
-    PosY = 228
+    PosY = 123
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2512,165 +1615,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.IPU'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression53: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 4032
-    PosY = 453
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.TasaAdministrativa'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression54: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 5280
-    PosY = 2070
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.Bomberos'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression55: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 6540
-    PosY = 2070
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.Bomberos'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression56: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 7815
-    PosY = 2070
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.Bomberos'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression57: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 9075
-    PosY = 2070
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'DATOS.Bomberos - INGRESO_DIA.Bomberos - INGRESO_ACUMULADO.Bomber' +
-      'os - BAJAS_DIA.Bomberos - BAJAS_ACUMULADAS.Bomberos'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression58: TRpExpression
-    Width = 1304
-    Height = 255
-    PosX = 4020
-    PosY = 2070
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.Bomberos'
+    Expression = 'DATOS.BajasAcumIPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2680,7 +1625,7 @@ object TRpReport
     Width = 1077
     Height = 225
     PosX = 2988
-    PosY = 2532
+    PosY = 3351
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2706,7 +1651,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 4023
-    PosY = 2772
+    PosY = 3591
     Type1Font = poLinked
     FontSize = 7
     Alignment = 2
@@ -2723,7 +1668,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.EMITIDO_FOND_AJENOS'
+    Expression = 'DATOS.INGRESODIA_FOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2733,7 +1678,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 5291
-    PosY = 2540
+    PosY = 3359
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2749,7 +1694,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.EMITIDO_FOND_PROPIOS'
+    Expression = 'DATOS.IngresoAcum_FOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2759,7 +1704,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 5291
-    PosY = 2780
+    PosY = 3599
     Type1Font = poLinked
     FontSize = 7
     Alignment = 2
@@ -2776,7 +1721,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.EMITIDO_FOND_AJENOS'
+    Expression = 'DATOS.IngresoAcum_FOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2786,7 +1731,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 6558
-    PosY = 2540
+    PosY = 3359
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2802,7 +1747,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.EMITIDO_FOND_PROPIOS'
+    Expression = 'DATOS.BajaDia_FOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2812,7 +1757,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 7825
-    PosY = 2540
+    PosY = 3359
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2828,7 +1773,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.EMITIDO_FOND_PROPIOS'
+    Expression = 'DATOS.BajasAcumFOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2838,7 +1783,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 7825
-    PosY = 2780
+    PosY = 3599
     Type1Font = poLinked
     FontSize = 7
     Alignment = 2
@@ -2855,7 +1800,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.EMITIDO_FOND_AJENOS'
+    Expression = 'DATOS.BajasAcumFOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2865,7 +1810,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 9093
-    PosY = 2532
+    PosY = 3351
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2882,9 +1827,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.EMITIDO_FOND_PROPIOS - INGRESO_DIA.EMITIDO_FOND_PROPIOS - ' +
-      'INGRESO_ACUMULADO.EMITIDO_FOND_PROPIOS - BAJAS_DIA.EMITIDO_FOND_' +
-      'PROPIOS - BAJAS_ACUMULADAS.EMITIDO_FOND_PROPIOS'
+      'DATOS.EMITIDO_FOND_PROPIOS - DATOS.INGRESODIA_FOND_PROPIOS - DAT' +
+      'OS.IngresoAcum_FOND_PROPIOS - DATOS.BajaDia_FOND_PROPIOS - DATOS' +
+      '.BajasAcumFOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2894,7 +1839,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 9093
-    PosY = 2772
+    PosY = 3591
     Type1Font = poLinked
     FontSize = 7
     Alignment = 2
@@ -2912,9 +1857,9 @@ object TRpReport
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.EMITIDO_FOND_AJENOS - INGRESO_DIA.EMITIDO_FOND_AJENOS - IN' +
-      'GRESO_ACUMULADO.EMITIDO_FOND_AJENOS - BAJAS_DIA.EMITIDO_FOND_AJE' +
-      'NOS - BAJAS_ACUMULADAS.EMITIDO_FOND_AJENOS'
+      'DATOS.EMITIDO_FOND_AJENOS - DATOS.INGRESODIA_FOND_AJENOS - DATOS' +
+      '.IngresoAcum_FOND_AJENOS - DATOS.BajaDia_FOND_AJENOS - DATOS.Baj' +
+      'asAcumFOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2924,7 +1869,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 6558
-    PosY = 2780
+    PosY = 3599
     Type1Font = poLinked
     FontSize = 7
     Alignment = 2
@@ -2941,7 +1886,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.EMITIDO_FOND_AJENOS'
+    Expression = 'DATOS.BajaDia_FOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2951,7 +1896,7 @@ object TRpReport
     Width = 1304
     Height = 225
     PosX = 4023
-    PosY = 2532
+    PosY = 3351
     Type1Font = poHelvetica
     FontSize = 7
     Alignment = 2
@@ -2967,7 +1912,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.EMITIDO_FOND_PROPIOS'
+    Expression = 'DATOS.INGRESODIA_FOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2977,7 +1922,7 @@ object TRpReport
     Width = 1077
     Height = 225
     PosX = 2988
-    PosY = 2772
+    PosY = 3591
     Type1Font = poLinked
     FontSize = 7
     Alignment = 2
@@ -2995,328 +1940,6 @@ object TRpReport
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
     Expression = 'DATOS.EMITIDO_FOND_AJENOS'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression69: TRpExpression
-    Width = 1077
-    Height = 225
-    PosX = 2988
-    PosY = 3108
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.Recargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression70: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 4023
-    PosY = 3348
-    Type1Font = poLinked
-    FontSize = 7
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.Interes'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression71: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 5291
-    PosY = 3116
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.Recargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression72: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 5291
-    PosY = 3356
-    Type1Font = poLinked
-    FontSize = 7
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.Interes'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression73: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 6558
-    PosY = 3116
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.Recargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression74: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 7825
-    PosY = 3116
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.Recargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression75: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 7825
-    PosY = 3356
-    Type1Font = poLinked
-    FontSize = 7
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.Interes'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression76: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 9093
-    PosY = 3108
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 
-      'DATOS.Recargo - INGRESO_DIA.Recargo - INGRESO_ACUMULADO.Recargo ' +
-      '- BAJAS_DIA.Recargo - BAJAS_ACUMULADAS.Recargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression77: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 9093
-    PosY = 3348
-    Type1Font = poLinked
-    FontSize = 7
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 
-      'DATOS.Interes - INGRESO_DIA.Interes - INGRESO_ACUMULADO.Interes ' +
-      '- BAJAS_DIA.Interes - BAJAS_ACUMULADAS.Interes'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression78: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 6558
-    PosY = 3356
-    Type1Font = poLinked
-    FontSize = 7
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.Interes'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression79: TRpExpression
-    Width = 1304
-    Height = 225
-    PosX = 4023
-    PosY = 3108
-    Type1Font = poHelvetica
-    FontSize = 7
-    Alignment = 2
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.Recargo'
-    DisplayFormat = '###,###,##0.00'
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
-  object TRpExpression80: TRpExpression
-    Width = 1077
-    Height = 225
-    PosX = 2988
-    PosY = 3348
-    Type1Font = poLinked
-    FontSize = 7
-    Alignment = 2
-    WordWrap = True
-    DataType = rpParamCurrency
-    DisplayFormat = '###,###,##0.00'
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial Narrow'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.Interes'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3345,7 +1968,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.TOTAL'
+    Expression = 'DATOS.TOTAL_INGRESODIA'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3374,7 +1997,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.TOTAL'
+    Expression = 'DATOS.TOTAL_IngresoAcum'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3403,7 +2026,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.TOTAL'
+    Expression = 'DATOS.TOTAL_INGRESODIA'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3432,17 +2055,563 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.TOTAL'
+    Expression = 'DATOS.TOTAL_IngresoAcum'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
     ExportExpression = ''
   end
-  object TRpExpression83: TRpExpression
-    Width = 915
-    Height = 285
-    PosX = 8745
-    PosY = 465
+  object TRpExpression11: TRpExpression
+    Width = 1077
+    Height = 255
+    PosX = 2985
+    PosY = 2304
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.Emitido_Bomberos'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression54: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 5280
+    PosY = 2304
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.IngresoAcum_Bomberos'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression55: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 6540
+    PosY = 2304
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.BajaDia_Bomberos'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression56: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 7815
+    PosY = 2304
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.BajasAcumBomberos'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression57: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 9075
+    PosY = 2304
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'DATOS.Emitido_Bomberos - DATOS.IngresoDia_Bomberos - DATOS.Ingre' +
+      'soAcum_Bomberos - DATOS.BajaDia_Bomberos - DATOS.BajasAcumBomber' +
+      'os'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression58: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 4020
+    PosY = 2304
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.IngresoDia_Bomberos'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel18: TRpLabel
+    Width = 2551
+    Height = 255
+    PosX = 0
+    PosY = 2304
+    Type1Font = poHelvetica
+    FontSize = 8
+    Alignment = 2
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'Bomberos'
+  end
+  object TRpExpression96: TRpExpression
+    Width = 1077
+    Height = 255
+    PosX = 2985
+    PosY = 1956
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.Emitido_Valo' +
+      'r2, NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression97: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 4020
+    PosY = 1956
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.IngresoDia_V' +
+      'alor2, NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression98: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 5280
+    PosY = 1956
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.IngresoAcum_' +
+      'Valor2, NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression99: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 6540
+    PosY = 1956
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.BajaDia_Valo' +
+      'r2, NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression100: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 7815
+    PosY = 1956
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.BajasAcumVal' +
+      'or2, NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression101: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 9075
+    PosY = 1956
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'DATOS.Emitido_Valor2 - DATOS.IngresoDia_Valor2 - DATOS.IngresoAc' +
+      'um_Valor2 - DATOS.BajaDia_Valor2 - DATOS.BajasAcumValor2'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression102: TRpExpression
+    Width = 2551
+    Height = 255
+    PosX = 0
+    PosY = 1956
+    Type1Font = poHelvetica
+    FontSize = 8
+    Alignment = 2
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'NUEVO_VALOR_2.CoeDeE_Descripcion'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression49: TRpExpression
+    Width = 1077
+    Height = 255
+    PosX = 2990
+    PosY = 1720
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.Emitido_' +
+      'Valor1 <> NULL, DATOS.Emitido_Valor1, 0), NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression50: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 4025
+    PosY = 1720
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.IngresoD' +
+      'ia_Valor1 <> NULL, DATOS.IngresoDia_Valor1, 0), NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression89: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 5285
+    PosY = 1720
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.IngresoA' +
+      'cum_Valor1 <> NULL, DATOS.IngresoAcum_Valor1, 0), NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression90: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 6545
+    PosY = 1720
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.BajaDia_' +
+      'Valor1 <> NULL, DATOS.BajaDia_Valor1, 0), NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression91: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 7820
+    PosY = 1720
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.BajasAcu' +
+      'mValor1 <> NULL, DATOS.BajasAcumValor1, 0), NULL)'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression92: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 9080
+    PosY = 1720
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'DATOS.Emitido_Valor1 - DATOS.IngresoDia_Valor1 - DATOS.IngresoAc' +
+      'um_Valor1 - DATOS.BajaDia_Valor1 - DATOS.BajasAcumValor1'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression93: TRpExpression
+    Width = 2551
+    Height = 255
+    PosX = 5
+    PosY = 1720
+    Type1Font = poHelvetica
+    FontSize = 8
+    Alignment = 2
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'NUEVO_VALOR_1.CoeDeE_Descripcion'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression94: TRpExpression
+    Width = 810
+    Height = 345
+    PosX = 8625
+    PosY = 345
     Type1Font = poHelvetica
     AutoExpand = False
     AutoContract = False
@@ -3460,11 +2629,11 @@ object TRpReport
     AgIniValue = '0'
     ExportExpression = ''
   end
-  object TRpExpression84: TRpExpression
-    Width = 1095
+  object TRpExpression95: TRpExpression
+    Width = 990
     Height = 264
-    PosX = 9885
-    PosY = 465
+    PosX = 9780
+    PosY = 345
     Type1Font = poHelvetica
     AutoExpand = False
     AutoContract = False
@@ -3482,20 +2651,10 @@ object TRpReport
     AgIniValue = '0'
     ExportExpression = ''
   end
-  object TRpShape2: TRpShape
-    Width = 10815
-    Height = 585
-    PosX = 0
-    PosY = 1380
-    PenWidth = 0
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-  end
   object TRpLabel0: TRpLabel
     Width = 1701
     Height = 227
-    PosX = 810
+    PosX = 690
     PosY = 1620
     Type1Font = poHelvetica
     FontStyle = 1
@@ -3511,7 +2670,7 @@ object TRpReport
   object TRpLabel2: TRpLabel
     Width = 1304
     Height = 255
-    PosX = 3105
+    PosX = 2985
     PosY = 1500
     Type1Font = poHelvetica
     FontSize = 7
@@ -3528,7 +2687,7 @@ object TRpReport
   object TRpLabel4: TRpLabel
     Width = 1304
     Height = 255
-    PosX = 4380
+    PosX = 4260
     PosY = 1500
     Type1Font = poHelvetica
     FontSize = 7
@@ -3545,7 +2704,7 @@ object TRpReport
   object TRpLabel5: TRpLabel
     Width = 1260
     Height = 345
-    PosX = 5640
+    PosX = 5520
     PosY = 1500
     Type1Font = poHelvetica
     FontSize = 7
@@ -3562,7 +2721,7 @@ object TRpReport
   object TRpLabel6: TRpLabel
     Width = 1304
     Height = 255
-    PosX = 6900
+    PosX = 6780
     PosY = 1500
     Type1Font = poHelvetica
     FontSize = 7
@@ -3579,7 +2738,7 @@ object TRpReport
   object TRpLabel7: TRpLabel
     Width = 1260
     Height = 345
-    PosX = 8175
+    PosX = 8055
     PosY = 1500
     Type1Font = poHelvetica
     FontSize = 7
@@ -3596,7 +2755,7 @@ object TRpReport
   object TRpLabel11: TRpLabel
     Width = 1304
     Height = 255
-    PosX = 9435
+    PosX = 9315
     PosY = 1500
     Type1Font = poHelvetica
     FontSize = 7
@@ -3609,5 +2768,1069 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     WideText = 'SALDO'
+  end
+  object TRpShape2: TRpShape
+    Width = 10815
+    Height = 585
+    PosX = 0
+    PosY = 1380
+    PenWidth = 0
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+  end
+  object TRpExpression70: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 4023
+    PosY = 3803
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'IngresoDia_Recargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression72: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 5291
+    PosY = 3811
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'IngresoAcum_Recargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression75: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 7825
+    PosY = 3811
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'BajasAcumRecargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression77: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 9093
+    PosY = 3803
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 
+      'DATOS.Emitido_Recargo - DATOS.IngresoDia_Recargo - DATOS.Ingreso' +
+      'Acum_Recargo - DATOS.BajaDia_Recargo - DATOS.BajasAcumRecargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression78: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 6558
+    PosY = 3811
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'BajaDia_Recargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression80: TRpExpression
+    Width = 1077
+    Height = 225
+    PosX = 2988
+    PosY = 3803
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'Emitido_Recargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel22: TRpLabel
+    Width = 2551
+    Height = 240
+    PosX = 0
+    PosY = 3795
+    Type1Font = poHelvetica
+    FontSize = 9
+    Alignment = 2
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'RECARGO'
+  end
+  object TRpExpression69: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 4023
+    PosY = 4028
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.IngresoDia_Interes'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression71: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 5291
+    PosY = 4036
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.IngresoAcum_Interes'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression73: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 7825
+    PosY = 4036
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.BajasAcumInteres'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression74: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 9093
+    PosY = 4028
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 
+      'DATOS.Emitido_Interes - DATOS.IngresoDia_Interes - DATOS.Ingreso' +
+      'Acum_Interes - DATOS.BajaDia_Interes - DATOS.BajasAcumInteres'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression76: TRpExpression
+    Width = 1304
+    Height = 225
+    PosX = 6558
+    PosY = 4036
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.BajaDia_Interes'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression79: TRpExpression
+    Width = 1077
+    Height = 225
+    PosX = 2988
+    PosY = 4028
+    Type1Font = poLinked
+    FontSize = 7
+    Alignment = 2
+    WordWrap = True
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial Narrow'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.Emitido_Interes'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel21: TRpLabel
+    Width = 2551
+    Height = 240
+    PosX = 0
+    PosY = 4020
+    Type1Font = poHelvetica
+    FontSize = 9
+    Alignment = 2
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'INTERES'
+  end
+  object TRpExpression2: TRpExpression
+    Width = 1077
+    Height = 255
+    PosX = 2985
+    PosY = 345
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.Emitido_TasaAdministrativa'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression23: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 5292
+    PosY = 348
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.IngresoAcum_TasaAdministrativa'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression29: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 6552
+    PosY = 348
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.BajaDia_TasaAdministrativa'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression39: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 7827
+    PosY = 348
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.BajasAcumTasaAdministrativa'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression45: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 9087
+    PosY = 348
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'DATOS.Emitido_TasaAdministrativa - DATOS.IngresoDia_TasaAdminist' +
+      'rativa - DATOS.IngresoAcum_TasaAdministrativa - DATOS.BajaDia_Ta' +
+      'saAdministrativa - DATOS.BajasAcumTasaAdministrativa'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression53: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 4032
+    PosY = 348
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.IngresoDia_TasaAdministrativa'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel13: TRpLabel
+    Width = 2551
+    Height = 255
+    PosX = 0
+    PosY = 345
+    Type1Font = poHelvetica
+    FontSize = 8
+    Alignment = 2
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'TasaAdministrativa'
+  end
+  object TRpExpression5: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 5292
+    PosY = 693
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.IngresoAcum_SolNoEdif'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression6: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 6552
+    PosY = 693
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.BajaDia_SolNoEdif'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression7: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 7827
+    PosY = 693
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.BajasAcumSolNoEdif'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression9: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 9087
+    PosY = 693
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'DATOS.Emitido_SolNoEdif - DATOS.IngresoDia_SolNoEdif - DATOS.Ing' +
+      'resoAcum_SolNoEdif - DATOS.BajaDia_SolNoEdif - DATOS.BajasAcumSo' +
+      'lNoEdif'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression10: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 4032
+    PosY = 693
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.IngresoDia_SolNoEdif'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel15: TRpLabel
+    Width = 2551
+    Height = 255
+    PosX = 0
+    PosY = 690
+    Type1Font = poHelvetica
+    FontSize = 8
+    Alignment = 2
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'SolNoEdif'
+  end
+  object TRpExpression4: TRpExpression
+    Width = 1077
+    Height = 255
+    PosX = 2985
+    PosY = 690
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.Emitido_SolNoEdif'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression13: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 5292
+    PosY = 918
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'IngresoAcum_ConstObsoleta'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression15: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 6552
+    PosY = 918
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'BajaDia_ConstObsoleta'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression16: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 7827
+    PosY = 918
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'BajasAcumConstObsoleta'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression17: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 9087
+    PosY = 918
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'DATOS.Emitido_ConstObsoleta - DATOS.IngresoDia_ConstObsoleta - D' +
+      'ATOS.IngresoAcum_ConstObsoleta - DATOS.BajaDia_ConstObsoleta - D' +
+      'ATOS.BajasAcumConstObsoleta'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression18: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 4032
+    PosY = 918
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'IngresoDia_ConstObsoleta'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel16: TRpLabel
+    Width = 2551
+    Height = 255
+    PosX = 0
+    PosY = 915
+    Type1Font = poHelvetica
+    FontSize = 8
+    Alignment = 2
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'ConstObsoleta'
+  end
+  object TRpExpression19: TRpExpression
+    Width = 1077
+    Height = 255
+    PosX = 2985
+    PosY = 915
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'Emitido_ConstObsoleta'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression24: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 5292
+    PosY = 1158
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'IngresoAcum_SNERecargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression25: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 6552
+    PosY = 1158
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'BajaDia_SNERecargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression26: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 7827
+    PosY = 1158
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'BajasAcumSNERecargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression27: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 9087
+    PosY = 1158
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 
+      'DATOS.Emitido_SNERecargo - DATOS.IngresoDia_SNERecargo - DATOS.I' +
+      'ngresoAcum_SNERecargo - DATOS.BajaDia_SNERecargo - DATOS.BajasAc' +
+      'umSNERecargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression28: TRpExpression
+    Width = 1304
+    Height = 255
+    PosX = 4032
+    PosY = 1158
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'IngresoDia_SNERecargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpLabel17: TRpLabel
+    Width = 2551
+    Height = 255
+    PosX = 0
+    PosY = 1155
+    Type1Font = poHelvetica
+    FontSize = 8
+    Alignment = 2
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    WideText = 'SNERecargo'
+  end
+  object TRpExpression30: TRpExpression
+    Width = 1077
+    Height = 255
+    PosX = 2985
+    PosY = 1155
+    Type1Font = poHelvetica
+    FontSize = 7
+    Alignment = 2
+    DataType = rpParamCurrency
+    DisplayFormat = '###,###,##0.00'
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'Emitido_SNERecargo'
+    DisplayFormat = '###,###,##0.00'
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
   end
 end

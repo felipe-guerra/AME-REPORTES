@@ -25,7 +25,7 @@ object TRpReport
         #10'  RIGHT(RTRIM(CARTERA_VENCIDA.CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AN' +
         'D REBAJA_VALOR.Reb_Codigo = :CODIGO'#13#10'  AND REBAJA_VALOR.RebVal_F' +
         'echa BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'ORDER BY '#13#10'  periodo' +
-        ','#13#10'  CARTERA_VENCIDA.Pre_CodigoCatastral;'#13#10
+        ','#13#10'  CARTERA_VENCIDA.Pre_CodigoCatastral,'#13#10'  CarVe_NumTitulo'#13#10
     end
     item
       Alias = 'CABECERA'
