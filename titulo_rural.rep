@@ -79,6 +79,15 @@ object TRpReport
         'SELECT '#13#10'FORMAT(GETDATE(), '#39'dd-MM-yyyy'#39') AS Fecha_Generado'#13#10', FO' +
         'RMAT(GETDATE(), '#39'HH:mm:ss'#39') AS Hora'#13#10'FROM [dbo].[FICHA_MUNICIPAL' +
         ']'
+    end
+    item
+      Alias = 'REBAJAS'
+      DatabaseAlias = 'CNNREPORTE'
+      SQL = 
+        'SELECT '#13#10'  '#39'Usted tiene una rebaja de: $'#39' + '#13#10'  REPLACE(CONVERT(' +
+        'VARCHAR, CAST(ISNULL(RebVal_Valor, 0) AS MONEY), 1), '#39'.00'#39', '#39'.00' +
+        #39') AS mensaje'#13#10'FROM '#13#10'  REBAJA_VALOR'#13#10'WHERE '#13#10'  TitPrCarVe_NumTi' +
+        'tulo = :NUMTITULO'
     end>
   DatabaseInfo = <
     item
@@ -102,7 +111,8 @@ object TRpReport
       Value = Null
       Datasets.Strings = (
         'DATOS'
-        'CABECERA')
+        'CABECERA'
+        'REBAJAS')
       Description = ''
       Hint = ''
       Search = ''
@@ -430,6 +440,9 @@ object TRpReport
       end
       item
         Component = TRpExpression35
+      end
+      item
+        Component = TRpExpression36
       end>
     ExternalTable = 'REPMAN_REPORTS'
     ExternalField = 'REPORT'
@@ -1620,29 +1633,6 @@ object TRpReport
     AgIniValue = '0'
     ExportExpression = ''
   end
-  object TRpExpression14: TRpExpression
-    Width = 1050
-    Height = 264
-    PosX = 2985
-    PosY = 4485
-    Type1Font = poHelvetica
-    FontSize = 8
-    AutoExpand = False
-    AutoContract = False
-    ExportPosition = 0
-    ExportSize = 1
-    ExportDoNewLine = False
-    PrintCondition = ''
-    DoBeforePrint = ''
-    DoAfterPrint = ''
-    WFontName = 'Arial'
-    LFontName = 'Helvetica'
-    Expression = 'DATOS.TitPr_FechaRecaudacion'
-    DisplayFormat = ''
-    ExportDisplayFormat = ''
-    AgIniValue = '0'
-    ExportExpression = ''
-  end
   object TRpLabel31: TRpLabel
     Width = 283
     Height = 240
@@ -2286,6 +2276,53 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 'CABECERA.Hora'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression14: TRpExpression
+    Width = 1050
+    Height = 264
+    PosX = 2985
+    PosY = 4485
+    Type1Font = poHelvetica
+    FontSize = 8
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'DATOS.TitPr_FechaRecaudacion'
+    DisplayFormat = ''
+    ExportDisplayFormat = ''
+    AgIniValue = '0'
+    ExportExpression = ''
+  end
+  object TRpExpression36: TRpExpression
+    Width = 3795
+    Height = 345
+    PosX = 465
+    PosY = 5055
+    Type1Font = poHelvetica
+    FontSize = 11
+    FontStyle = 1
+    AutoExpand = False
+    AutoContract = False
+    ExportPosition = 0
+    ExportSize = 1
+    ExportDoNewLine = False
+    PrintCondition = ''
+    DoBeforePrint = ''
+    DoAfterPrint = ''
+    WFontName = 'Arial'
+    LFontName = 'Helvetica'
+    Expression = 'REBAJAS.mensaje'
     DisplayFormat = ''
     ExportDisplayFormat = ''
     AgIniValue = '0'
