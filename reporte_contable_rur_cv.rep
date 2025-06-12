@@ -13,44 +13,254 @@ object TRpReport
       Alias = 'DATOS'
       DatabaseAlias = 'CNNREPORTE'
       SQL = 
-        'SELECT'#13#10'    YEAR(CarVe_FechaEmision) AS periodo,'#13#10#13#10'    -- Fondo' +
-        's Propios (componentes)'#13#10'    SUM(COALESCE(CarVe_IPU, 0)) AS IPU,' +
-        #13#10'    SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdminist' +
-        'rativa,'#13#10'    SUM(COALESCE(CarVe_Magisterio, 0)) AS Magisterio,'#13#10 +
-        '    SUM(COALESCE(CarVe_EducacionElemental, 0)) AS EducacionEleme' +
-        'ntal,'#13#10'    SUM(COALESCE(CarVe_MedicinaRural, 0)) AS MedicinaRura' +
-        'l,'#13#10'    SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS OtrosAdicion' +
-        'ales,'#13#10'    SUM(COALESCE(CarVe_RecoleccionBasura, 0)) AS Recolecc' +
-        'ionBasura,'#13#10'    SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'    S' +
-        'UM(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10#13#10'    -- FONDOS_PROPIO' +
-        'S'#13#10'    SUM('#13#10'        COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(' +
-        'CarVe_TasaAdministrativa, 0) +'#13#10'        COALESCE(CarVe_Magisteri' +
-        'o, 0) +'#13#10'        COALESCE(CarVe_EducacionElemental, 0) +'#13#10'      ' +
-        '  COALESCE(CarVe_MedicinaRural, 0) +'#13#10'        COALESCE(CarVe_Otr' +
-        'osAdicionales, 0) +'#13#10'        COALESCE(CarVe_RecoleccionBasura, 0' +
-        ') +'#13#10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe' +
-        '_Valor2, 0)'#13#10'    ) AS EMITIDO_FOND_PROPIOS,'#13#10#13#10'    -- Fondos Aje' +
-        'nos (componentes)'#13#10'    SUM(COALESCE(CarVe_Bomberos, 0)) AS Bombe' +
-        'ros,'#13#10'    SUM(COALESCE(CarVe_ViviendaRural, 0)) AS ViviendaRural' +
-        ','#13#10'    SUM(COALESCE(CarVe_EstablecEducativos, 0)) AS EstablecEdu' +
-        'cativos,'#13#10#13#10'    -- FONDOS_AJENOS'#13#10'    SUM('#13#10'        COALESCE(Car' +
-        'Ve_Bomberos, 0) +'#13#10'        COALESCE(CarVe_ViviendaRural, 0) +'#13#10' ' +
-        '       COALESCE(CarVe_EstablecEducativos, 0)'#13#10'    ) AS EMITIDO_F' +
-        'OND_AJENOS,'#13#10#13#10'    -- Inter'#233's'#13#10'    SUM(COALESCE(CarVe_Interes, 0' +
-        ')) AS Interes,'#13#10#13#10'    -- TOTAL (sin recargo)'#13#10'    SUM('#13#10'        ' +
-        'COALESCE(CarVe_IPU, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrat' +
-        'iva, 0) +'#13#10'        COALESCE(CarVe_Magisterio, 0) +'#13#10'        COAL' +
-        'ESCE(CarVe_EducacionElemental, 0) +'#13#10'        COALESCE(CarVe_Medi' +
-        'cinaRural, 0) +'#13#10'        COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10 +
-        '        COALESCE(CarVe_RecoleccionBasura, 0) +'#13#10'        COALESCE' +
-        '(CarVe_Valor1, 0) +'#13#10'        COALESCE(CarVe_Valor2, 0) +'#13#10'      ' +
-        '  COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(CarVe_Vivienda' +
-        'Rural, 0) +'#13#10'        COALESCE(CarVe_EstablecEducativos, 0) +'#13#10'  ' +
-        '      COALESCE(CarVe_Interes, 0)'#13#10'    ) AS TOTAL'#13#10#13#10'FROM CARTERA' +
-        '_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AND C' +
-        'arVe_Estado IN ('#39'E'#39', '#39'B'#39', '#39'C'#39', '#39'N'#39', '#39'J'#39', '#39'Q'#39')'#13#10'   AND CarVe_Fech' +
-        'aEmision <= :FECHA_HASTA'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10'ORD' +
-        'ER BY YEAR(CarVe_FechaEmision);'
+        'SELECT'#13#10'    COALESCE(COALESCE(a.periodo, b.periodo), c.periodo) ' +
+        'AS periodo,'#13#10#13#10'    -- Valores Emitidos'#13#10'    a.IPU AS Emitido_IPU' +
+        ','#13#10'    a.TasaAdministrativa AS Emitido_TasaAdministrativa,'#13#10'    ' +
+        'a.Magisterio AS Emitido_Magisterio,'#13#10'    a.EducacionElemental AS' +
+        ' Emitido_EducacionElemental,'#13#10'    a.MedicinaRural AS Emitido_Med' +
+        'icinaRural,'#13#10'    a.OtrosAdicionales AS Emitido_OtrosAdicionales,' +
+        #13#10'    a.RecoleccionBasura AS Emitido_RecoleccionBasura,'#13#10'    a.V' +
+        'alor1 AS Emitido_Valor1,'#13#10'    a.Valor2 AS Emitido_Valor2,'#13#10'    a' +
+        '.EMITIDO_FOND_PROPIOS,'#13#10'    a.Bomberos AS Emitido_Bomberos,'#13#10'   ' +
+        ' a.ViviendaRural AS Emitido_ViviendaRural,'#13#10'    a.EstablecEducat' +
+        'ivos AS Emitido_EstablecEducativos,'#13#10'    a.EMITIDO_FOND_AJENOS,'#13 +
+        #10'    a.Interes AS Emitido_Interes,'#13#10'    a.TOTAL AS TOTAL_EMITIDO' +
+        ','#13#10#13#10'    -- Valores Recaudado en el D'#237'a'#13#10'    b.IPU AS IngresoDia' +
+        '_IPU,'#13#10'    b.TasaAdministrativa AS IngresoDia_TasaAdministrativa' +
+        ','#13#10'    b.Magisterio AS IngresoDia_Magisterio,'#13#10'    b.EducacionEl' +
+        'emental AS IngresoDia_EducacionElemental,'#13#10'    b.MedicinaRural A' +
+        'S IngresoDia_MedicinaRural,'#13#10'    b.OtrosAdicionales AS IngresoDi' +
+        'a_OtrosAdicionales,'#13#10'    b.RecoleccionBasura AS IngresoDia_Recol' +
+        'eccionBasura,'#13#10'    b.Valor1 AS IngresoDia_Valor1,'#13#10'    b.Valor2 ' +
+        'AS IngresoDia_Valor2,'#13#10'    b.EMITIDO_FOND_PROPIOS AS INGRESODIA_' +
+        'FOND_PROPIOS,'#13#10'    b.Bomberos AS IngresoDia_Bomberos,'#13#10'    b.Viv' +
+        'iendaRural AS IngresoDia_ViviendaRural,'#13#10'    b.EstablecEducativo' +
+        's AS IngresoDia_EstablecEducativos,'#13#10'    b.EMITIDO_FOND_AJENOS A' +
+        'S INGRESODIA_FOND_AJENOS,'#13#10'    b.Interes AS IngresoDia_Interes,'#13 +
+        #10'    b.TOTAL AS TOTAL_INGRESODIA,'#13#10#13#10'    -- Valores INGRESO ACUM' +
+        'ULADO'#13#10'    c.IPU AS IngresoAcum_IPU,'#13#10'    c.TasaAdministrativa A' +
+        'S IngresoAcum_TasaAdministrativa,'#13#10'    c.Magisterio AS IngresoAc' +
+        'um_Magisterio,'#13#10'    c.EducacionElemental AS IngresoAcum_Educacio' +
+        'nElemental,'#13#10'    c.MedicinaRural AS IngresoAcum_MedicinaRural,'#13#10 +
+        '    c.OtrosAdicionales AS IngresoAcum_OtrosAdicionales,'#13#10'    c.R' +
+        'ecoleccionBasura AS IngresoAcum_RecoleccionBasura,'#13#10'    c.Valor1' +
+        ' AS IngresoAcum_Valor1,'#13#10'    c.Valor2 AS IngresoAcum_Valor2,'#13#10'  ' +
+        '  c.EMITIDO_FOND_PROPIOS AS IngresoAcum_FOND_PROPIOS,'#13#10'    c.Bom' +
+        'beros AS IngresoAcum_Bomberos,'#13#10'    c.ViviendaRural AS IngresoAc' +
+        'um_ViviendaRural,'#13#10'    c.EstablecEducativos AS IngresoAcum_Estab' +
+        'lecEducativos,'#13#10'    c.EMITIDO_FOND_AJENOS AS IngresoAcum_FOND_AJ' +
+        'ENOS,'#13#10'    c.Interes AS IngresoAcum_Interes,'#13#10'    c.TOTAL AS TOT' +
+        'AL_IngresoAcum,'#13#10#13#10'--Bajas del dia'#13#10'    d.IPU AS BajaDia_IPU,'#13#10' ' +
+        '   d.TasaAdministrativa AS BajaDia_TasaAdministrativa,'#13#10'    d.Ma' +
+        'gisterio AS BajaDia_Magisterio,'#13#10'    d.EducacionElemental AS Baj' +
+        'aDia_EducacionElemental,'#13#10'    d.MedicinaRural AS BajaDia_Medicin' +
+        'aRural,'#13#10'    d.OtrosAdicionales AS BajaDia_OtrosAdicionales,'#13#10'  ' +
+        '  d.RecoleccionBasura AS BajaDia_RecoleccionBasura,'#13#10'    d.Valor' +
+        '1 AS BajaDia_Valor1,'#13#10'    d.Valor2 AS BajaDia_Valor2,'#13#10'    d.EMI' +
+        'TIDO_FOND_PROPIOS AS BajaDia_FOND_PROPIOS,'#13#10'    d.Bomberos AS Ba' +
+        'jaDia_Bomberos,'#13#10'    d.ViviendaRural AS BajaDia_ViviendaRural,'#13#10 +
+        '    d.EstablecEducativos AS BajaDia_EstablecEducativos,'#13#10'    d.E' +
+        'MITIDO_FOND_AJENOS AS BajaDia_FOND_AJENOS,'#13#10'    d.Interes AS Baj' +
+        'aDia_Interes,'#13#10'    d.TOTAL AS TOTAL_BajaDia,'#13#10#13#10'--Bajas acumulad' +
+        'as'#13#10'    e.IPU AS BajasAcumIPU,'#13#10'    e.TasaAdministrativa AS Baja' +
+        'sAcumTasaAdministrativa,'#13#10'    e.Magisterio AS BajasAcumMagisteri' +
+        'o,'#13#10'    e.EducacionElemental AS BajasAcumEducacionElemental,'#13#10'  ' +
+        '  e.MedicinaRural AS BajasAcumMedicinaRural,'#13#10'    e.OtrosAdicion' +
+        'ales AS BajasAcumOtrosAdicionales,'#13#10'    e.RecoleccionBasura AS B' +
+        'ajasAcumRecoleccionBasura,'#13#10'    e.Valor1 AS BajasAcumValor1,'#13#10'  ' +
+        '  e.Valor2 AS BajasAcumValor2,'#13#10'    e.EMITIDO_FOND_PROPIOS AS Ba' +
+        'jasAcumFOND_PROPIOS,'#13#10'    e.Bomberos AS BajasAcumBomberos,'#13#10'    ' +
+        'e.ViviendaRural AS BajasAcumViviendaRural,'#13#10'    e.EstablecEducat' +
+        'ivos AS BajasAcumEstablecEducativos,'#13#10'    e.EMITIDO_FOND_AJENOS ' +
+        'AS BajasAcumFOND_AJENOS,'#13#10'    e.Interes AS BajasAcumInteres,'#13#10'  ' +
+        '  e.TOTAL AS TOTAL_BajasAcum'#13#10#13#10'FROM'#13#10'('#13#10'    -- Emitidos'#13#10'    SE' +
+        'LECT'#13#10'        YEAR(CarVe_FechaEmision) AS periodo,'#13#10'        SUM(' +
+        'COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'        SUM(COALESCE(CarVe_Tasa' +
+        'Administrativa, 0)) AS TasaAdministrativa,'#13#10'        SUM(COALESCE' +
+        '(CarVe_Magisterio, 0)) AS Magisterio,'#13#10'        SUM(COALESCE(CarV' +
+        'e_EducacionElemental, 0)) AS EducacionElemental,'#13#10'        SUM(CO' +
+        'ALESCE(CarVe_MedicinaRural, 0)) AS MedicinaRural,'#13#10'        SUM(C' +
+        'OALESCE(CarVe_OtrosAdicionales, 0)) AS OtrosAdicionales,'#13#10'      ' +
+        '  SUM(COALESCE(CarVe_RecoleccionBasura, 0)) AS RecoleccionBasura' +
+        ','#13#10'        SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'        SU' +
+        'M(COALESCE(CarVe_Valor2, 0)) AS Valor2,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_IPU, 0) + COALESCE(CarVe_TasaAdministrativa, 0) + COALESCE(C' +
+        'arVe_Magisterio, 0) +'#13#10'            COALESCE(CarVe_EducacionEleme' +
+        'ntal, 0) + COALESCE(CarVe_MedicinaRural, 0) + COALESCE(CarVe_Otr' +
+        'osAdicionales, 0) +'#13#10'            COALESCE(CarVe_RecoleccionBasur' +
+        'a, 0) + COALESCE(CarVe_Valor1, 0) + COALESCE(CarVe_Valor2, 0)) A' +
+        'S EMITIDO_FOND_PROPIOS,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0)' +
+        ') AS Bomberos,'#13#10'        SUM(COALESCE(CarVe_ViviendaRural, 0)) AS' +
+        ' ViviendaRural,'#13#10'        SUM(COALESCE(CarVe_EstablecEducativos, ' +
+        '0)) AS EstablecEducativos,'#13#10'        SUM(COALESCE(CarVe_Bomberos,' +
+        ' 0) + COALESCE(CarVe_ViviendaRural, 0) + COALESCE(CarVe_Establec' +
+        'Educativos, 0)) AS EMITIDO_FOND_AJENOS,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_Interes, 0)) AS Interes,'#13#10'        SUM(COALESCE(CarVe_IPU, 0)' +
+        ' + COALESCE(CarVe_TasaAdministrativa, 0) + COALESCE(CarVe_Magist' +
+        'erio, 0) +'#13#10'            COALESCE(CarVe_EducacionElemental, 0) + ' +
+        'COALESCE(CarVe_MedicinaRural, 0) + COALESCE(CarVe_OtrosAdicional' +
+        'es, 0) +'#13#10'            COALESCE(CarVe_RecoleccionBasura, 0) + COA' +
+        'LESCE(CarVe_Valor1, 0) + COALESCE(CarVe_Valor2, 0) +'#13#10'          ' +
+        '  COALESCE(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaRural, 0)' +
+        ' + COALESCE(CarVe_EstablecEducativos, 0) +'#13#10'            COALESCE' +
+        '(CarVe_Interes, 0)) AS TOTAL'#13#10'    FROM CARTERA_VENCIDA'#13#10'    WHER' +
+        'E RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'      AND CarVe_Estad' +
+        'o IN ('#39'E'#39', '#39'B'#39', '#39'C'#39', '#39'N'#39', '#39'J'#39', '#39'Q'#39')'#13#10'      AND YEAR(CarVe_FechaE' +
+        'mision) IN ('#13#10'          SELECT YEAR(CarVe_FechaEmision)'#13#10'       ' +
+        '   FROM CARTERA_VENCIDA'#13#10'          WHERE CarVe_FechaRecaudacion ' +
+        'BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'          GROUP BY CarVe_' +
+        'FechaEmision'#13#10'      )'#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') ' +
+        'a'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13#10'    -- Ingreso del d'#237'a'#13#10'    SELECT'#13#10'   ' +
+        '     YEAR(CarVe_FechaEmision) AS periodo,'#13#10'        SUM(COALESCE(' +
+        'CarVe_IPU, 0)) AS IPU,'#13#10'        SUM(COALESCE(CarVe_TasaAdministr' +
+        'ativa, 0)) AS TasaAdministrativa,'#13#10'        SUM(COALESCE(CarVe_Ma' +
+        'gisterio, 0)) AS Magisterio,'#13#10'        SUM(COALESCE(CarVe_Educaci' +
+        'onElemental, 0)) AS EducacionElemental,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_MedicinaRural, 0)) AS MedicinaRural,'#13#10'        SUM(COALESCE(C' +
+        'arVe_OtrosAdicionales, 0)) AS OtrosAdicionales,'#13#10'        SUM(COA' +
+        'LESCE(CarVe_RecoleccionBasura, 0)) AS RecoleccionBasura,'#13#10'      ' +
+        '  SUM(COALESCE(CarVe_Valor1, 0)) AS Valor1,'#13#10'        SUM(COALESC' +
+        'E(CarVe_Valor2, 0)) AS Valor2,'#13#10'        SUM(COALESCE(CarVe_IPU, ' +
+        '0) + COALESCE(CarVe_TasaAdministrativa, 0) + COALESCE(CarVe_Magi' +
+        'sterio, 0) +'#13#10'            COALESCE(CarVe_EducacionElemental, 0) ' +
+        '+ COALESCE(CarVe_MedicinaRural, 0) + COALESCE(CarVe_OtrosAdicion' +
+        'ales, 0) +'#13#10'            COALESCE(CarVe_RecoleccionBasura, 0) + C' +
+        'OALESCE(CarVe_Valor1, 0) + COALESCE(CarVe_Valor2, 0)) AS EMITIDO' +
+        '_FOND_PROPIOS,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomb' +
+        'eros,'#13#10'        SUM(COALESCE(CarVe_ViviendaRural, 0)) AS Vivienda' +
+        'Rural,'#13#10'        SUM(COALESCE(CarVe_EstablecEducativos, 0)) AS Es' +
+        'tablecEducativos,'#13#10'        SUM(COALESCE(CarVe_Bomberos, 0) + COA' +
+        'LESCE(CarVe_ViviendaRural, 0) + COALESCE(CarVe_EstablecEducativo' +
+        's, 0)) AS EMITIDO_FOND_AJENOS,'#13#10'        SUM(COALESCE(CarVe_Inter' +
+        'es, 0)) AS Interes,'#13#10'        SUM(COALESCE(CarVe_IPU, 0) + COALES' +
+        'CE(CarVe_TasaAdministrativa, 0) + COALESCE(CarVe_Magisterio, 0) ' +
+        '+'#13#10'            COALESCE(CarVe_EducacionElemental, 0) + COALESCE(' +
+        'CarVe_MedicinaRural, 0) + COALESCE(CarVe_OtrosAdicionales, 0) +'#13 +
+        #10'            COALESCE(CarVe_RecoleccionBasura, 0) + COALESCE(Car' +
+        'Ve_Valor1, 0) + COALESCE(CarVe_Valor2, 0) +'#13#10'            COALESC' +
+        'E(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaRural, 0) + COALES' +
+        'CE(CarVe_EstablecEducativos, 0) +'#13#10'            COALESCE(CarVe_In' +
+        'teres, 0)) AS TOTAL'#13#10'    FROM CARTERA_VENCIDA'#13#10'    WHERE RIGHT(R' +
+        'TRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'      AND CarVe_Estado IN ('#39'C'#39 +
+        ', '#39'Q'#39')'#13#10'      AND CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE AN' +
+        'D :FECHA_HASTA'#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') b'#13#10'ON a' +
+        '.periodo = b.periodo'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13#10'    -- Recaudado has' +
+        'ta fecha anterior'#13#10'    SELECT'#13#10'        YEAR(CarVe_FechaEmision) ' +
+        'AS periodo,'#13#10'        SUM(COALESCE(CarVe_IPU, 0)) AS IPU,'#13#10'      ' +
+        '  SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdministrati' +
+        'va,'#13#10'        SUM(COALESCE(CarVe_Magisterio, 0)) AS Magisterio,'#13#10 +
+        '        SUM(COALESCE(CarVe_EducacionElemental, 0)) AS EducacionE' +
+        'lemental,'#13#10'        SUM(COALESCE(CarVe_MedicinaRural, 0)) AS Medi' +
+        'cinaRural,'#13#10'        SUM(COALESCE(CarVe_OtrosAdicionales, 0)) AS ' +
+        'OtrosAdicionales,'#13#10'        SUM(COALESCE(CarVe_RecoleccionBasura,' +
+        ' 0)) AS RecoleccionBasura,'#13#10'        SUM(COALESCE(CarVe_Valor1, 0' +
+        ')) AS Valor1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) AS Valor2,' +
+        #13#10'        SUM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdmini' +
+        'strativa, 0) + COALESCE(CarVe_Magisterio, 0) +'#13#10'            COAL' +
+        'ESCE(CarVe_EducacionElemental, 0) + COALESCE(CarVe_MedicinaRural' +
+        ', 0) + COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'            COALES' +
+        'CE(CarVe_RecoleccionBasura, 0) + COALESCE(CarVe_Valor1, 0) + COA' +
+        'LESCE(CarVe_Valor2, 0)) AS EMITIDO_FOND_PROPIOS,'#13#10'        SUM(CO' +
+        'ALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10'        SUM(COALESCE(Ca' +
+        'rVe_ViviendaRural, 0)) AS ViviendaRural,'#13#10'        SUM(COALESCE(C' +
+        'arVe_EstablecEducativos, 0)) AS EstablecEducativos,'#13#10'        SUM' +
+        '(COALESCE(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaRural, 0) ' +
+        '+ COALESCE(CarVe_EstablecEducativos, 0)) AS EMITIDO_FOND_AJENOS,' +
+        #13#10'        SUM(COALESCE(CarVe_Interes, 0)) AS Interes,'#13#10'        S' +
+        'UM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdministrativa, 0' +
+        ') + COALESCE(CarVe_Magisterio, 0) +'#13#10'            COALESCE(CarVe_' +
+        'EducacionElemental, 0) + COALESCE(CarVe_MedicinaRural, 0) + COAL' +
+        'ESCE(CarVe_OtrosAdicionales, 0) +'#13#10'            COALESCE(CarVe_Re' +
+        'coleccionBasura, 0) + COALESCE(CarVe_Valor1, 0) + COALESCE(CarVe' +
+        '_Valor2, 0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) + COALESC' +
+        'E(CarVe_ViviendaRural, 0) + COALESCE(CarVe_EstablecEducativos, 0' +
+        ') +'#13#10'            COALESCE(CarVe_Interes, 0)) AS TOTAL'#13#10'    FROM ' +
+        'CARTERA_VENCIDA'#13#10'    WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'P' +
+        'R'#39#13#10'      AND CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'      AND CarVe_FechaR' +
+        'ecaudacion < :FECHA_DESDE'#13#10#13#10'      AND YEAR(CarVe_FechaEmision) ' +
+        'IN ('#13#10'          SELECT YEAR(CarVe_FechaEmision)'#13#10'          FROM ' +
+        'CARTERA_VENCIDA'#13#10'          WHERE CarVe_FechaRecaudacion BETWEEN ' +
+        ':FECHA_DESDE AND :FECHA_HASTA'#13#10'          GROUP BY CarVe_FechaEmi' +
+        'sion'#13#10'      )'#13#10#13#10#13#10'    GROUP BY YEAR(CarVe_FechaEmision)'#13#10') c'#13#10'O' +
+        'N COALESCE(a.periodo, b.periodo) = c.periodo'#13#10#13#10#13#10'FULL OUTER JOI' +
+        'N'#13#10'('#13#10'    -- Bajas del d'#237'a'#13#10'    SELECT'#13#10'        YEAR(CarVe_Fecha' +
+        'Emision) AS periodo,'#13#10'        SUM(COALESCE(CarVe_IPU, 0)) AS IPU' +
+        ','#13#10'        SUM(COALESCE(CarVe_TasaAdministrativa, 0)) AS TasaAdm' +
+        'inistrativa,'#13#10'        SUM(COALESCE(CarVe_Magisterio, 0)) AS Magi' +
+        'sterio,'#13#10'        SUM(COALESCE(CarVe_EducacionElemental, 0)) AS E' +
+        'ducacionElemental,'#13#10'        SUM(COALESCE(CarVe_MedicinaRural, 0)' +
+        ') AS MedicinaRural,'#13#10'        SUM(COALESCE(CarVe_OtrosAdicionales' +
+        ', 0)) AS OtrosAdicionales,'#13#10'        SUM(COALESCE(CarVe_Recolecci' +
+        'onBasura, 0)) AS RecoleccionBasura,'#13#10'        SUM(COALESCE(CarVe_' +
+        'Valor1, 0)) AS Valor1,'#13#10'        SUM(COALESCE(CarVe_Valor2, 0)) A' +
+        'S Valor2,'#13#10'        SUM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_T' +
+        'asaAdministrativa, 0) + COALESCE(CarVe_Magisterio, 0) +'#13#10'       ' +
+        '     COALESCE(CarVe_EducacionElemental, 0) + COALESCE(CarVe_Medi' +
+        'cinaRural, 0) + COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'         ' +
+        '   COALESCE(CarVe_RecoleccionBasura, 0) + COALESCE(CarVe_Valor1,' +
+        ' 0) + COALESCE(CarVe_Valor2, 0)) AS EMITIDO_FOND_PROPIOS,'#13#10'     ' +
+        '   SUM(COALESCE(CarVe_Bomberos, 0)) AS Bomberos,'#13#10'        SUM(CO' +
+        'ALESCE(CarVe_ViviendaRural, 0)) AS ViviendaRural,'#13#10'        SUM(C' +
+        'OALESCE(CarVe_EstablecEducativos, 0)) AS EstablecEducativos,'#13#10'  ' +
+        '      SUM(COALESCE(CarVe_Bomberos, 0) + COALESCE(CarVe_ViviendaR' +
+        'ural, 0) + COALESCE(CarVe_EstablecEducativos, 0)) AS EMITIDO_FON' +
+        'D_AJENOS,'#13#10'        SUM(COALESCE(CarVe_Interes, 0)) AS Interes,'#13#10 +
+        '        SUM(COALESCE(CarVe_IPU, 0) + COALESCE(CarVe_TasaAdminist' +
+        'rativa, 0) + COALESCE(CarVe_Magisterio, 0) +'#13#10'            COALES' +
+        'CE(CarVe_EducacionElemental, 0) + COALESCE(CarVe_MedicinaRural, ' +
+        '0) + COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'            COALESCE' +
+        '(CarVe_RecoleccionBasura, 0) + COALESCE(CarVe_Valor1, 0) + COALE' +
+        'SCE(CarVe_Valor2, 0) +'#13#10'            COALESCE(CarVe_Bomberos, 0) ' +
+        '+ COALESCE(CarVe_ViviendaRural, 0) + COALESCE(CarVe_EstablecEduc' +
+        'ativos, 0) +'#13#10'            COALESCE(CarVe_Interes, 0)) AS TOTAL'#13#10 +
+        '    FROM CARTERA_VENCIDA'#13#10'    WHERE RIGHT(RTRIM(CarVe_NumTitulo)' +
+        ', 2) = '#39'PR'#39#13#10'      AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'      AND Car' +
+        'Ve_FechaRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'    G' +
+        'ROUP BY YEAR(CarVe_FechaEmision)'#13#10') d'#13#10'ON COALESCE(COALESCE(a.pe' +
+        'riodo, b.periodo), c.periodo) = d.periodo'#13#10#13#10'FULL OUTER JOIN'#13#10'('#13 +
+        #10'    -- Bajas Acumuladas'#13#10'SELECT'#13#10'    YEAR(CarVe_FechaEmision) A' +
+        'S periodo,'#13#10#13#10'    -- Fondos Propios (componentes)'#13#10'    SUM(COALE' +
+        'SCE(CarVe_IPU, 0)) AS IPU,'#13#10'    SUM(COALESCE(CarVe_TasaAdministr' +
+        'ativa, 0)) AS TasaAdministrativa,'#13#10'    SUM(COALESCE(CarVe_Magist' +
+        'erio, 0)) AS Magisterio,'#13#10'    SUM(COALESCE(CarVe_EducacionElemen' +
+        'tal, 0)) AS EducacionElemental,'#13#10'    SUM(COALESCE(CarVe_Medicina' +
+        'Rural, 0)) AS MedicinaRural,'#13#10'    SUM(COALESCE(CarVe_OtrosAdicio' +
+        'nales, 0)) AS OtrosAdicionales,'#13#10'    SUM(COALESCE(CarVe_Recolecc' +
+        'ionBasura, 0)) AS RecoleccionBasura,'#13#10'    SUM(COALESCE(CarVe_Val' +
+        'or1, 0)) AS Valor1,'#13#10'    SUM(COALESCE(CarVe_Valor2, 0)) AS Valor' +
+        '2,'#13#10#13#10'    -- FONDOS_PROPIOS'#13#10'    SUM('#13#10'        COALESCE(CarVe_IP' +
+        'U, 0) +'#13#10'        COALESCE(CarVe_TasaAdministrativa, 0) +'#13#10'      ' +
+        '  COALESCE(CarVe_Magisterio, 0) +'#13#10'        COALESCE(CarVe_Educac' +
+        'ionElemental, 0) +'#13#10'        COALESCE(CarVe_MedicinaRural, 0) +'#13#10 +
+        '        COALESCE(CarVe_OtrosAdicionales, 0) +'#13#10'        COALESCE(' +
+        'CarVe_RecoleccionBasura, 0) +'#13#10'        COALESCE(CarVe_Valor1, 0)' +
+        ' +'#13#10'        COALESCE(CarVe_Valor2, 0)'#13#10'    ) AS EMITIDO_FOND_PRO' +
+        'PIOS,'#13#10#13#10'    -- Fondos Ajenos (componentes)'#13#10'    SUM(COALESCE(Ca' +
+        'rVe_Bomberos, 0)) AS Bomberos,'#13#10'    SUM(COALESCE(CarVe_ViviendaR' +
+        'ural, 0)) AS ViviendaRural,'#13#10'    SUM(COALESCE(CarVe_EstablecEduc' +
+        'ativos, 0)) AS EstablecEducativos,'#13#10#13#10'    -- FONDOS_AJENOS'#13#10'    ' +
+        'SUM('#13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'        COALESCE(Ca' +
+        'rVe_ViviendaRural, 0) +'#13#10'        COALESCE(CarVe_EstablecEducativ' +
+        'os, 0)'#13#10'    ) AS EMITIDO_FOND_AJENOS,'#13#10#13#10'    -- Inter'#233's'#13#10'    SUM' +
+        '(COALESCE(CarVe_Interes, 0)) AS Interes,'#13#10#13#10'    -- TOTAL (sin re' +
+        'cargo)'#13#10'    SUM('#13#10'        COALESCE(CarVe_IPU, 0) +'#13#10'        COAL' +
+        'ESCE(CarVe_TasaAdministrativa, 0) +'#13#10'        COALESCE(CarVe_Magi' +
+        'sterio, 0) +'#13#10'        COALESCE(CarVe_EducacionElemental, 0) +'#13#10' ' +
+        '       COALESCE(CarVe_MedicinaRural, 0) +'#13#10'        COALESCE(CarV' +
+        'e_OtrosAdicionales, 0) +'#13#10'        COALESCE(CarVe_RecoleccionBasu' +
+        'ra, 0) +'#13#10'        COALESCE(CarVe_Valor1, 0) +'#13#10'        COALESCE(' +
+        'CarVe_Valor2, 0) +'#13#10'        COALESCE(CarVe_Bomberos, 0) +'#13#10'     ' +
+        '   COALESCE(CarVe_ViviendaRural, 0) +'#13#10'        COALESCE(CarVe_Es' +
+        'tablecEducativos, 0) +'#13#10'        COALESCE(CarVe_Interes, 0)'#13#10'    ' +
+        ') AS TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumT' +
+        'itulo), 2) = '#39'PR'#39#13#10'  AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe' +
+        '_FechaRecaudacion < :FECHA_DESDE'#13#10#13#10#13#10'      AND YEAR(CarVe_Fecha' +
+        'Emision) IN ('#13#10'          SELECT YEAR(CarVe_FechaEmision)'#13#10'      ' +
+        '    FROM CARTERA_VENCIDA'#13#10'          WHERE CarVe_FechaRecaudacion' +
+        ' BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'          GROUP BY CarVe' +
+        '_FechaEmision'#13#10'      )'#13#10#13#10#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10#13 +
+        #10') e'#13#10'ON COALESCE(a.periodo, b.periodo, c.periodo, d.periodo) = ' +
+        'e.periodo'#13#10#13#10'ORDER BY periodo DESC;'
     end
     item
       Alias = 'CABECERA'
@@ -119,7 +329,7 @@ object TRpReport
         '_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AND C' +
         'arVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND CarVe_FechaRecaudacion BETWEEN ' +
         ':FECHA_DESDE AND :FECHA_HASTA'#13#10'GROUP BY YEAR(CarVe_FechaEmision)' +
-        #13#10'ORDER BY YEAR(CarVe_FechaEmision);'#13#10
+        #13#10'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10
     end
     item
       Alias = 'INGRESO_ACUMULADO'
@@ -162,7 +372,7 @@ object TRpReport
         '_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AND C' +
         'arVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND CarVe_FechaRecaudacion < :FECHA' +
         '_DESDE'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_F' +
-        'echaEmision);'#13#10#13#10#13#10#13#10#13#10#13#10#13#10#13#10
+        'echaEmision) DESC;'#13#10#13#10#13#10#13#10#13#10#13#10#13#10#13#10
     end
     item
       Alias = 'BAJAS_DIA'
@@ -205,7 +415,7 @@ object TRpReport
         '_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AND C' +
         'arVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe_FechaRecaudacion BETWEEN ' +
         ':FECHA_DESDE AND :FECHA_HASTA'#13#10'GROUP BY YEAR(CarVe_FechaEmision)' +
-        #13#10'ORDER BY YEAR(CarVe_FechaEmision);'#13#10#13#10#13#10
+        #13#10'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10#13#10#13#10
     end
     item
       Alias = 'BAJAS_ACUMULADAS'
@@ -248,7 +458,7 @@ object TRpReport
         '_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo), 2) = '#39'PR'#39#13#10'  AND C' +
         'arVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe_FechaRecaudacion < :FECHA' +
         '_DESDE'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_F' +
-        'echaEmision);'#13#10#13#10#13#10#13#10
+        'echaEmision) DESC;'#13#10#13#10#13#10#13#10
     end>
   DatabaseInfo = <
     item
@@ -269,7 +479,7 @@ object TRpReport
     item
       Name = 'FECHA_DESDE'
       AllowNulls = False
-      Value = Null
+      Value = 45806d
       ParamType = rpParamDateTime
       Datasets.Strings = (
         'DATOS'
@@ -287,7 +497,7 @@ object TRpReport
     item
       Name = 'FECHA_HASTA'
       AllowNulls = False
-      Value = Null
+      Value = 45806.8465740741d
       ParamType = rpParamDateTime
       Datasets.Strings = (
         'DATOS'
@@ -337,6 +547,7 @@ object TRpReport
         Section = TRpSection6
       end>
     Alias = 'DATOS'
+    PrintOnlyIfDataAvailable = False
   end
   object TRpSection0: TRpSection
     Width = 11010
@@ -1110,7 +1321,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.IPU'
+    Expression = 'DATOS.Emitido_IPU'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1442,7 +1653,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.TasaAdministrativa'
+    Expression = 'DATOS.Emitido_TasaAdministrativa'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1468,7 +1679,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.Magisterio'
+    Expression = 'DATOS.Emitido_Magisterio'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1494,7 +1705,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.EducacionElemental'
+    Expression = 'DATOS.Emitido_EducacionElemental'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1544,7 +1755,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.Magisterio'
+    Expression = 'DATOS.IngresoDia_Magisterio'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1570,7 +1781,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.EducacionElemental'
+    Expression = 'DATOS.IngresoDia_EducacionElemental'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1596,7 +1807,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.IPU'
+    Expression = 'DATOS.IngresoDia_IPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1622,7 +1833,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.TasaAdministrativa'
+    Expression = 'DATOS.IngresoAcum_TasaAdministrativa'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1648,7 +1859,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.Magisterio'
+    Expression = 'DATOS.IngresoAcum_Magisterio'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1674,7 +1885,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.EducacionElemental'
+    Expression = 'DATOS.IngresoAcum_EducacionElemental'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1700,7 +1911,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.TasaAdministrativa'
+    Expression = 'DATOS.BajaDia_TasaAdministrativa'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1726,7 +1937,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.Magisterio'
+    Expression = 'DATOS.BajaDia_Magisterio'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1752,7 +1963,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.EducacionElemental'
+    Expression = 'DATOS.BajaDia_EducacionElemental'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1778,7 +1989,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.IPU'
+    Expression = 'DATOS.BajaDia_IPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1804,7 +2015,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.IPU'
+    Expression = 'DATOS.IngresoAcum_IPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1830,7 +2041,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.TasaAdministrativa'
+    Expression = 'DATOS.BajasAcumTasaAdministrativa'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1856,7 +2067,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.Magisterio'
+    Expression = 'DATOS.BajasAcumMagisterio'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1882,7 +2093,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.EducacionElemental'
+    Expression = 'DATOS.BajasAcumEducacionElemental'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1909,9 +2120,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.TasaAdministrativa - INGRESO_DIA.TasaAdministrativa - INGR' +
-      'ESO_ACUMULADO.TasaAdministrativa - BAJAS_DIA.TasaAdministrativa ' +
-      '- BAJAS_ACUMULADAS.TasaAdministrativa'
+      'DATOS.Emitido_TasaAdministrativa - DATOS.IngresoDia_TasaAdminist' +
+      'rativa - DATOS.IngresoAcum_TasaAdministrativa - DATOS.BajaDia_Ta' +
+      'saAdministrativa - DATOS.BajasAcumTasaAdministrativa'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1938,8 +2149,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.Magisterio - INGRESO_DIA.Magisterio - INGRESO_ACUMULADO.Ma' +
-      'gisterio - BAJAS_DIA.Magisterio - BAJAS_ACUMULADAS.Magisterio'
+      'DATOS.Emitido_Magisterio - DATOS.IngresoDia_Magisterio - DATOS.I' +
+      'ngresoAcum_Magisterio - DATOS.BajaDia_Magisterio - DATOS.BajasAc' +
+      'umMagisterio'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1966,9 +2178,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.EducacionElemental - INGRESO_DIA.EducacionElemental - INGR' +
-      'ESO_ACUMULADO.EducacionElemental - BAJAS_DIA.EducacionElemental ' +
-      '- BAJAS_ACUMULADAS.EducacionElemental'
+      'DATOS.Emitido_EducacionElemental - DATOS.IngresoDia_EducacionEle' +
+      'mental - DATOS.IngresoAcum_EducacionElemental - DATOS.BajaDia_Ed' +
+      'ucacionElemental - DATOS.BajasAcumEducacionElemental'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -1995,8 +2207,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.IPU - INGRESO_DIA.IPU - INGRESO_ACUMULADO.IPU - BAJAS_DIA.' +
-      'IPU - BAJAS_ACUMULADAS.IPU'
+      'DATOS.Emitido_IPU - DATOS.IngresoDia_IPU - DATOS.IngresoAcum_IPU' +
+      ' - DATOS.BajaDia_IPU - DATOS.BajasAcumIPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2022,7 +2234,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.IPU'
+    Expression = 'DATOS.BajasAcumIPU'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2048,7 +2260,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.TasaAdministrativa'
+    Expression = 'DATOS.IngresoDia_TasaAdministrativa'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2101,7 +2313,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.EMITIDO_FOND_AJENOS'
+    Expression = 'DATOS.INGRESODIA_FOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2127,7 +2339,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.EMITIDO_FOND_PROPIOS'
+    Expression = 'DATOS.IngresoAcum_FOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2154,7 +2366,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.EMITIDO_FOND_AJENOS'
+    Expression = 'DATOS.IngresoAcum_FOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2180,7 +2392,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.EMITIDO_FOND_PROPIOS'
+    Expression = 'DATOS.BajaDia_FOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2206,7 +2418,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.EMITIDO_FOND_PROPIOS'
+    Expression = 'DATOS.BajasAcumFOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2233,7 +2445,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.EMITIDO_FOND_AJENOS'
+    Expression = 'DATOS.BajasAcumFOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2260,9 +2472,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.EMITIDO_FOND_PROPIOS - INGRESO_DIA.EMITIDO_FOND_PROPIOS - ' +
-      'INGRESO_ACUMULADO.EMITIDO_FOND_PROPIOS - BAJAS_DIA.EMITIDO_FOND_' +
-      'PROPIOS - BAJAS_ACUMULADAS.EMITIDO_FOND_PROPIOS'
+      'DATOS.EMITIDO_FOND_PROPIOS - DATOS.INGRESODIA_FOND_PROPIOS - DAT' +
+      'OS.IngresoAcum_FOND_PROPIOS - DATOS.BajaDia_FOND_PROPIOS - DATOS' +
+      '.BajasAcumFOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2290,9 +2502,9 @@ object TRpReport
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.EMITIDO_FOND_AJENOS - INGRESO_DIA.EMITIDO_FOND_AJENOS - IN' +
-      'GRESO_ACUMULADO.EMITIDO_FOND_AJENOS - BAJAS_DIA.EMITIDO_FOND_AJE' +
-      'NOS - BAJAS_ACUMULADAS.EMITIDO_FOND_AJENOS'
+      'DATOS.EMITIDO_FOND_AJENOS - DATOS.INGRESODIA_FOND_AJENOS - DATOS' +
+      '.IngresoAcum_FOND_AJENOS - DATOS.BajaDia_FOND_AJENOS - DATOS.Baj' +
+      'asAcumFOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2319,7 +2531,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.EMITIDO_FOND_AJENOS'
+    Expression = 'DATOS.BajaDia_FOND_AJENOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2345,7 +2557,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.EMITIDO_FOND_PROPIOS'
+    Expression = 'DATOS.INGRESODIA_FOND_PROPIOS'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2399,7 +2611,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.Interes'
+    Expression = 'DATOS.IngresoDia_Interes'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2426,7 +2638,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.Interes'
+    Expression = 'DATOS.IngresoAcum_Interes'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2453,7 +2665,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.Interes'
+    Expression = 'DATOS.BajasAcumInteres'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2481,8 +2693,8 @@ object TRpReport
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.Interes - INGRESO_DIA.Interes - INGRESO_ACUMULADO.Interes ' +
-      '- BAJAS_DIA.Interes - BAJAS_ACUMULADAS.Interes'
+      'DATOS.Emitido_Interes - DATOS.IngresoDia_Interes - DATOS.Ingreso' +
+      'Acum_Interes - DATOS.BajaDia_Interes - DATOS.BajasAcumInteres'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2509,7 +2721,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.Interes'
+    Expression = 'DATOS.BajaDia_Interes'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2536,7 +2748,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.Interes'
+    Expression = 'DATOS.Emitido_Interes'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2565,7 +2777,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.TOTAL'
+    Expression = 'DATOS.TOTAL_INGRESODIA'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2594,7 +2806,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.TOTAL'
+    Expression = 'DATOS.TOTAL_IngresoAcum'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2623,7 +2835,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.TOTAL'
+    Expression = 'DATOS.TOTAL_INGRESODIA'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2652,7 +2864,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial Narrow'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.TOTAL'
+    Expression = 'DATOS.TOTAL_IngresoAcum'
     DisplayFormat = '#,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2678,7 +2890,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.Bomberos'
+    Expression = 'DATOS.Emitido_Bomberos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2704,7 +2916,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.Bomberos'
+    Expression = 'DATOS.IngresoAcum_Bomberos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2730,7 +2942,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.Bomberos'
+    Expression = 'DATOS.BajaDia_Bomberos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2756,7 +2968,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.Bomberos'
+    Expression = 'DATOS.BajasAcumBomberos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2783,8 +2995,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.Bomberos - INGRESO_DIA.Bomberos - INGRESO_ACUMULADO.Bomber' +
-      'os - BAJAS_DIA.Bomberos - BAJAS_ACUMULADAS.Bomberos'
+      'DATOS.Emitido_Bomberos - DATOS.IngresoDia_Bomberos - DATOS.Ingre' +
+      'soAcum_Bomberos - DATOS.BajaDia_Bomberos - DATOS.BajasAcumBomber' +
+      'os'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2810,7 +3023,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.Bomberos'
+    Expression = 'DATOS.IngresoDia_Bomberos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2851,7 +3064,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.ViviendaRural'
+    Expression = 'DATOS.Emitido_ViviendaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2877,7 +3090,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.ViviendaRural'
+    Expression = 'DATOS.IngresoAcum_ViviendaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2903,7 +3116,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.ViviendaRural'
+    Expression = 'DATOS.BajaDia_ViviendaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2929,7 +3142,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.ViviendaRural'
+    Expression = 'DATOS.BajasAcumViviendaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2956,9 +3169,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.ViviendaRural - INGRESO_DIA.ViviendaRural - INGRESO_ACUMUL' +
-      'ADO.ViviendaRural - BAJAS_DIA.ViviendaRural - BAJAS_ACUMULADAS.V' +
-      'iviendaRural'
+      'DATOS.Emitido_ViviendaRural - DATOS.IngresoDia_ViviendaRural - D' +
+      'ATOS.IngresoAcum_ViviendaRural - DATOS.BajaDia_ViviendaRural - D' +
+      'ATOS.BajasAcumViviendaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -2984,7 +3197,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.ViviendaRural'
+    Expression = 'DATOS.IngresoDia_ViviendaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3025,7 +3238,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.EstablecEducativos'
+    Expression = 'DATOS.Emitido_EstablecEducativos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3051,7 +3264,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.EstablecEducativos'
+    Expression = 'DATOS.IngresoAcum_EstablecEducativos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3077,7 +3290,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.EstablecEducativos'
+    Expression = 'DATOS.BajaDia_EstablecEducativos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3103,7 +3316,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.EstablecEducativos'
+    Expression = 'DATOS.BajasAcumEstablecEducativos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3130,9 +3343,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.EstablecEducativos - INGRESO_DIA.EstablecEducativos - INGR' +
-      'ESO_ACUMULADO.EstablecEducativos - BAJAS_DIA.EstablecEducativos ' +
-      '- BAJAS_ACUMULADAS.EstablecEducativos'
+      'DATOS.Emitido_EstablecEducativos - DATOS.IngresoDia_EstablecEduc' +
+      'ativos - DATOS.IngresoAcum_EstablecEducativos - DATOS.BajaDia_Es' +
+      'tablecEducativos - DATOS.BajasAcumEstablecEducativos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3158,7 +3371,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.EstablecEducativos'
+    Expression = 'DATOS.IngresoDia_EstablecEducativos'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3199,8 +3412,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.Valor2, NULL' +
-      ')'
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.Emitido_Valo' +
+      'r2, NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3226,8 +3439,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, INGRESO_DIA.Valor2' +
-      ', NULL)'
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.IngresoDia_V' +
+      'alor2, NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3253,7 +3466,7 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, INGRESO_ACUMULADO.' +
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.IngresoAcum_' +
       'Valor2, NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
@@ -3280,8 +3493,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, BAJAS_DIA.Valor2, ' +
-      'NULL)'
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.BajaDia_Valo' +
+      'r2, NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3307,8 +3520,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, BAJAS_ACUMULADAS.V' +
-      'alor2, NULL)'
+      'IIF(NUEVO_VALOR_2.CoeDeE_Descripcion <> NULL, DATOS.BajasAcumVal' +
+      'or2, NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3334,8 +3547,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.Valor2 - INGRESO_DIA.Valor2 - INGRESO_ACUMULADO.Valor2 - B' +
-      'AJAS_DIA.Valor2 - BAJAS_ACUMULADAS.Valor2'
+      'DATOS.Emitido_Valor2 - DATOS.IngresoDia_Valor2 - DATOS.IngresoAc' +
+      'um_Valor2 - DATOS.BajaDia_Valor2 - DATOS.BajasAcumValor2'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3385,7 +3598,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.MedicinaRural'
+    Expression = 'DATOS.Emitido_MedicinaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3411,7 +3624,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.MedicinaRural'
+    Expression = 'DATOS.IngresoDia_MedicinaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3437,7 +3650,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.MedicinaRural'
+    Expression = 'DATOS.IngresoAcum_MedicinaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3463,7 +3676,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.MedicinaRural'
+    Expression = 'DATOS.BajaDia_MedicinaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3489,7 +3702,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.MedicinaRural'
+    Expression = 'DATOS.BajasAcumMedicinaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3516,9 +3729,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.MedicinaRural - INGRESO_DIA.MedicinaRural - INGRESO_ACUMUL' +
-      'ADO.MedicinaRural - BAJAS_DIA.MedicinaRural - BAJAS_ACUMULADAS.M' +
-      'edicinaRural'
+      'DATOS.Emitido_MedicinaRural - DATOS.IngresoDia_MedicinaRural - D' +
+      'ATOS.IngresoAcum_MedicinaRural - DATOS.BajaDia_MedicinaRural - D' +
+      'ATOS.BajasAcumMedicinaRural'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3559,7 +3772,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.OtrosAdicionales'
+    Expression = 'DATOS.Emitido_OtrosAdicionales'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3585,7 +3798,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.OtrosAdicionales'
+    Expression = 'DATOS.IngresoDia_OtrosAdicionales'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3611,7 +3824,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.OtrosAdicionales'
+    Expression = 'DATOS.IngresoAcum_OtrosAdicionales'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3637,7 +3850,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.OtrosAdicionales'
+    Expression = 'DATOS.BajaDia_OtrosAdicionales'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3663,7 +3876,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.OtrosAdicionales'
+    Expression = 'DATOS.BajasAcumOtrosAdicionales'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3690,9 +3903,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.OtrosAdicionales - INGRESO_DIA.OtrosAdicionales - INGRESO_' +
-      'ACUMULADO.OtrosAdicionales - BAJAS_DIA.OtrosAdicionales - BAJAS_' +
-      'ACUMULADAS.OtrosAdicionales'
+      'DATOS.Emitido_OtrosAdicionales - DATOS.IngresoDia_OtrosAdicional' +
+      'es - DATOS.IngresoAcum_OtrosAdicionales - DATOS.BajaDia_OtrosAdi' +
+      'cionales - DATOS.BajasAcumOtrosAdicionales'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3733,7 +3946,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'DATOS.RecoleccionBasura'
+    Expression = 'DATOS.Emitido_RecoleccionBasura'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3759,7 +3972,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_DIA.RecoleccionBasura'
+    Expression = 'DATOS.IngresoDia_RecoleccionBasura'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3785,7 +3998,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'INGRESO_ACUMULADO.RecoleccionBasura'
+    Expression = 'DATOS.IngresoAcum_RecoleccionBasura'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3811,7 +4024,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_DIA.RecoleccionBasura'
+    Expression = 'DATOS.BajaDia_RecoleccionBasura'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3837,7 +4050,7 @@ object TRpReport
     DoAfterPrint = ''
     WFontName = 'Arial'
     LFontName = 'Helvetica'
-    Expression = 'BAJAS_ACUMULADAS.RecoleccionBasura'
+    Expression = 'DATOS.BajasAcumRecoleccionBasura'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3864,9 +4077,9 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.RecoleccionBasura - INGRESO_DIA.RecoleccionBasura - INGRES' +
-      'O_ACUMULADO.RecoleccionBasura - BAJAS_DIA.RecoleccionBasura - BA' +
-      'JAS_ACUMULADAS.RecoleccionBasura'
+      'DATOS.Emitido_RecoleccionBasura - DATOS.IngresoDia_RecoleccionBa' +
+      'sura - DATOS.IngresoAcum_RecoleccionBasura - DATOS.BajaDia_Recol' +
+      'eccionBasura - DATOS.BajasAcumRecoleccionBasura'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3907,8 +4120,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.Valor1 <' +
-      '> NULL, DATOS.Valor1, 0), NULL)'
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.Emitido_' +
+      'Valor1 <> NULL, DATOS.Emitido_Valor1, 0), NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3934,8 +4147,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(INGRESO_DIA.Va' +
-      'lor1 <> NULL, INGRESO_DIA.Valor1, 0), NULL)'
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.IngresoD' +
+      'ia_Valor1 <> NULL, DATOS.IngresoDia_Valor1, 0), NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3961,8 +4174,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(INGRESO_ACUMUL' +
-      'ADO.Valor1 <> NULL, INGRESO_ACUMULADO.Valor1, 0), NULL)'
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.IngresoA' +
+      'cum_Valor1 <> NULL, DATOS.IngresoAcum_Valor1, 0), NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -3988,8 +4201,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(BAJAS_DIA.Valo' +
-      'r1 <> NULL, BAJAS_DIA.Valor1, 0), NULL)'
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.BajaDia_' +
+      'Valor1 <> NULL, DATOS.BajaDia_Valor1, 0), NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -4015,8 +4228,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(BAJAS_ACUMULAD' +
-      'AS.Valor1 <> NULL, BAJAS_ACUMULADAS.Valor1, 0), NULL)'
+      'IIF(NUEVO_VALOR_1.CoeDeE_Descripcion <> NULL, IIF(DATOS.BajasAcu' +
+      'mValor1 <> NULL, DATOS.BajasAcumValor1, 0), NULL)'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'
@@ -4042,8 +4255,8 @@ object TRpReport
     WFontName = 'Arial'
     LFontName = 'Helvetica'
     Expression = 
-      'DATOS.Valor1 - INGRESO_DIA.Valor1 - INGRESO_ACUMULADO.Valor1 - B' +
-      'AJAS_DIA.Valor1 - BAJAS_ACUMULADAS.Valor1'
+      'DATOS.Emitido_Valor1 - DATOS.IngresoDia_Valor1 - DATOS.IngresoAc' +
+      'um_Valor1 - DATOS.BajaDia_Valor1 - DATOS.BajasAcumValor1'
     DisplayFormat = '###,###,##0.00'
     ExportDisplayFormat = ''
     AgIniValue = '0'

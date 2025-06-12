@@ -39,8 +39,9 @@ object TRpReport
         'rVe_Interes, 0) +'#13#10'        COALESCE(CarVe_Recargo, 0)'#13#10'    ) AS ' +
         'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
         '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'E'#39', '#39'B'#39', '#39'C'#39', '#39'N'#39', '#39'J'#39', '#39'Q' +
-        #39')'#13#10'   AND CarVe_FechaEmision <= :FECHA_HASTA'#13#10'GROUP BY YEAR(Car' +
-        'Ve_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_FechaEmision);'#13#10
+        #39')'#13#10'  AND CarVe_FechaRecaudacion BETWEEN :FECHA_DESDE AND :FECHA' +
+        '_HASTA'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_F' +
+        'echaEmision) DESC;'#13#10
     end
     item
       Alias = 'CABECERA'
@@ -99,7 +100,7 @@ object TRpReport
         'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
         '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND CarVe_Fech' +
         'aRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'GROUP BY YEA' +
-        'R(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_FechaEmision);'#13#10
+        'R(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10
     end
     item
       Alias = 'INGRESO_ACUMULADO'
@@ -132,7 +133,7 @@ object TRpReport
         'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
         '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'C'#39', '#39'Q'#39')'#13#10'  AND CarVe_Fech' +
         'aRecaudacion < :FECHA_DESDE'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10 +
-        'ORDER BY YEAR(CarVe_FechaEmision);'#13#10#13#10#13#10#13#10#13#10#13#10#13#10#13#10
+        'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10#13#10#13#10#13#10#13#10#13#10#13#10#13#10
     end
     item
       Alias = 'BAJAS_DIA'
@@ -165,7 +166,8 @@ object TRpReport
         'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
         '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe_Fech' +
         'aRecaudacion BETWEEN :FECHA_DESDE AND :FECHA_HASTA'#13#10'GROUP BY YEA' +
-        'R(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_FechaEmision);'#13#10#13#10#13#10
+        'R(CarVe_FechaEmision)'#13#10'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10 +
+        #13#10#13#10
     end
     item
       Alias = 'BAJAS_ACUMULADAS'
@@ -198,7 +200,7 @@ object TRpReport
         'TOTAL'#13#10#13#10'FROM CARTERA_VENCIDA'#13#10'WHERE RIGHT(RTRIM(CarVe_NumTitulo' +
         '), 2) = '#39'PU'#39#13#10'  AND CarVe_Estado IN ('#39'B'#39', '#39'J'#39')'#13#10'  AND CarVe_Fech' +
         'aRecaudacion < :FECHA_DESDE'#13#10'GROUP BY YEAR(CarVe_FechaEmision)'#13#10 +
-        'ORDER BY YEAR(CarVe_FechaEmision);'#13#10#13#10#13#10#13#10
+        'ORDER BY YEAR(CarVe_FechaEmision) DESC;'#13#10#13#10#13#10#13#10
     end>
   DatabaseInfo = <
     item
