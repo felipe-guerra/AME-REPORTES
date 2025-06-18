@@ -1,6 +1,6 @@
 object TRpReport
   PageOrientation = rpOrientationLandscape
-  Pagesize = rpPageSizeUser
+  Pagesize = rpPageSizeCustom
   PageHeight = 8120
   PageWidth = 5742
   PageBackColor = 16777215
