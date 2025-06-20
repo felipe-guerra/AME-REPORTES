@@ -436,7 +436,7 @@ object TRpReport
     item
       Name = 'FECHA_DESDE'
       AllowNulls = False
-      Value = 45805d
+      Value = Null
       ParamType = rpParamDateTime
       Datasets.Strings = (
         'DATOS'
@@ -454,7 +454,7 @@ object TRpReport
     item
       Name = 'FECHA_HASTA'
       AllowNulls = False
-      Value = 45805.9999884259d
+      Value = Null
       ParamType = rpParamDateTime
       Datasets.Strings = (
         'DATOS'
